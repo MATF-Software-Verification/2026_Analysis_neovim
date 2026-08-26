@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - nvim_unittest.info - nvim/buffer.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory nvim">nvim</a> - buffer.h<span style="font-size: 80%;"> (source / <a href="buffer.h.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">nvim_unittest.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntry">2</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-08-26 13:15:22</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">50.0&nbsp;%</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">1</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #pragma once</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;stdint.h&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : </span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &quot;nvim/buffer_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &quot;nvim/eval/typval_defs.h&quot;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;nvim/ex_cmds_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;nvim/gettext_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;nvim/macros_defs.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;nvim/marktree_defs.h&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;nvim/types_defs.h&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : /// Values for buflist_getfile()</span>
+<span id="L14"><span class="lineNum">      14</span>              : enum getf_values {</span>
+<span id="L15"><span class="lineNum">      15</span>              :   GETF_SETMARK = 0x01,  ///&lt; set pcmark before jumping</span>
+<span id="L16"><span class="lineNum">      16</span>              :   GETF_ALT     = 0x02,  ///&lt; jumping to alternate file (not buf num)</span>
+<span id="L17"><span class="lineNum">      17</span>              :   GETF_SWITCH  = 0x04,  ///&lt; respect 'switchbuf' settings when jumping</span>
+<span id="L18"><span class="lineNum">      18</span>              : };</span>
+<span id="L19"><span class="lineNum">      19</span>              : </span>
+<span id="L20"><span class="lineNum">      20</span>              : // Return values of getfile()</span>
+<span id="L21"><span class="lineNum">      21</span>              : enum getf_retvalues {</span>
+<span id="L22"><span class="lineNum">      22</span>              :   GETFILE_ERROR       = 1,   ///&lt; normal error</span>
+<span id="L23"><span class="lineNum">      23</span>              :   GETFILE_NOT_WRITTEN = 2,   ///&lt; &quot;not written&quot; error</span>
+<span id="L24"><span class="lineNum">      24</span>              :   GETFILE_SAME_FILE   = 0,   ///&lt; success, same file</span>
+<span id="L25"><span class="lineNum">      25</span>              :   GETFILE_OPEN_OTHER  = -1,  ///&lt; success, opened another file</span>
+<span id="L26"><span class="lineNum">      26</span>              :   GETFILE_UNUSED      = 8,</span>
+<span id="L27"><span class="lineNum">      27</span>              : };</span>
+<span id="L28"><span class="lineNum">      28</span>              : </span>
+<span id="L29"><span class="lineNum">      29</span>              : /// Values for buflist_new() flags</span>
+<span id="L30"><span class="lineNum">      30</span>              : enum bln_values {</span>
+<span id="L31"><span class="lineNum">      31</span>              :   BLN_CURBUF = 1,   ///&lt; May re-use curbuf for new buffer</span>
+<span id="L32"><span class="lineNum">      32</span>              :   BLN_LISTED = 2,   ///&lt; Put new buffer in buffer list</span>
+<span id="L33"><span class="lineNum">      33</span>              :   BLN_DUMMY  = 4,   ///&lt; Allocating dummy buffer</span>
+<span id="L34"><span class="lineNum">      34</span>              :   BLN_NEW    = 8,   ///&lt; create a new buffer</span>
+<span id="L35"><span class="lineNum">      35</span>              :   BLN_NOOPT  = 16,  ///&lt; Don't copy options to existing buffer</span>
+<span id="L36"><span class="lineNum">      36</span>              :   // BLN_DUMMY_OK = 32,  // also find an existing dummy buffer</span>
+<span id="L37"><span class="lineNum">      37</span>              :   // BLN_REUSE = 64,   // may re-use number from buf_reuse</span>
+<span id="L38"><span class="lineNum">      38</span>              :   BLN_NOCURWIN = 128,  ///&lt; buffer is not associated with curwin</span>
+<span id="L39"><span class="lineNum">      39</span>              : };</span>
+<span id="L40"><span class="lineNum">      40</span>              : </span>
+<span id="L41"><span class="lineNum">      41</span>              : /// Values for action argument for do_buffer_ext() and close_buffer()</span>
+<span id="L42"><span class="lineNum">      42</span>              : enum dobuf_action_values {</span>
+<span id="L43"><span class="lineNum">      43</span>              :   DOBUF_GOTO   = 0,  ///&lt; go to specified buffer</span>
+<span id="L44"><span class="lineNum">      44</span>              :   DOBUF_SPLIT  = 1,  ///&lt; split window and go to specified buffer</span>
+<span id="L45"><span class="lineNum">      45</span>              :   DOBUF_UNLOAD = 2,  ///&lt; unload specified buffer(s)</span>
+<span id="L46"><span class="lineNum">      46</span>              :   DOBUF_DEL    = 3,  ///&lt; delete specified buffer(s) from buflist</span>
+<span id="L47"><span class="lineNum">      47</span>              :   DOBUF_WIPE   = 4,  ///&lt; delete specified buffer(s) really</span>
+<span id="L48"><span class="lineNum">      48</span>              : };</span>
+<span id="L49"><span class="lineNum">      49</span>              : </span>
+<span id="L50"><span class="lineNum">      50</span>              : /// Values for start argument for do_buffer_ext()</span>
+<span id="L51"><span class="lineNum">      51</span>              : enum dobuf_start_values {</span>
+<span id="L52"><span class="lineNum">      52</span>              :   DOBUF_CURRENT = 0,  ///&lt; &quot;count&quot; buffer from current buffer</span>
+<span id="L53"><span class="lineNum">      53</span>              :   DOBUF_FIRST   = 1,  ///&lt; &quot;count&quot; buffer from first buffer</span>
+<span id="L54"><span class="lineNum">      54</span>              :   DOBUF_LAST    = 2,  ///&lt; &quot;count&quot; buffer from last buffer</span>
+<span id="L55"><span class="lineNum">      55</span>              :   DOBUF_MOD     = 3,  ///&lt; &quot;count&quot; mod. buffer from current buffer</span>
+<span id="L56"><span class="lineNum">      56</span>              : };</span>
+<span id="L57"><span class="lineNum">      57</span>              : </span>
+<span id="L58"><span class="lineNum">      58</span>              : /// Values for flags argument of do_buffer_ext()</span>
+<span id="L59"><span class="lineNum">      59</span>              : enum dobuf_flags_value {</span>
+<span id="L60"><span class="lineNum">      60</span>              :   DOBUF_FORCEIT  = 1,  ///&lt; :cmd!</span>
+<span id="L61"><span class="lineNum">      61</span>              :   DOBUF_SKIPHELP = 4,  ///&lt; skip or keep help buffers depending on b_help of the</span>
+<span id="L62"><span class="lineNum">      62</span>              :                        ///&lt; starting buffer</span>
+<span id="L63"><span class="lineNum">      63</span>              : };</span>
+<span id="L64"><span class="lineNum">      64</span>              : </span>
+<span id="L65"><span class="lineNum">      65</span>              : /// flags for buf_freeall()</span>
+<span id="L66"><span class="lineNum">      66</span>              : enum bfa_values {</span>
+<span id="L67"><span class="lineNum">      67</span>              :   BFA_DEL          = 1,  ///&lt; buffer is going to be deleted</span>
+<span id="L68"><span class="lineNum">      68</span>              :   BFA_WIPE         = 2,  ///&lt; buffer is going to be wiped out</span>
+<span id="L69"><span class="lineNum">      69</span>              :   BFA_KEEP_UNDO    = 4,  ///&lt; do not free undo information</span>
+<span id="L70"><span class="lineNum">      70</span>              :   BFA_IGNORE_ABORT = 8,  ///&lt; do not abort for aborting()</span>
+<span id="L71"><span class="lineNum">      71</span>              : };</span>
+<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L73"><span class="lineNum">      73</span>              : EXTERN char *msg_loclist INIT( = N_(&quot;[Location List]&quot;));</span>
+<span id="L74"><span class="lineNum">      74</span>              : EXTERN char *msg_qflist INIT( = N_(&quot;[Quickfix List]&quot;));</span>
+<span id="L75"><span class="lineNum">      75</span>              : </span>
+<span id="L76"><span class="lineNum">      76</span>              : #include &quot;buffer.h.generated.h&quot;</span>
+<span id="L77"><span class="lineNum">      77</span>              : #include &quot;buffer.h.inline.generated.h&quot;</span>
+<span id="L78"><span class="lineNum">      78</span>              : </span>
+<span id="L79"><span class="lineNum">      79</span>              : /// Get b:changedtick value</span>
+<span id="L80"><span class="lineNum">      80</span>              : ///</span>
+<span id="L81"><span class="lineNum">      81</span>              : /// Faster then querying b:.</span>
+<span id="L82"><span class="lineNum">      82</span>              : ///</span>
+<span id="L83"><span class="lineNum">      83</span>              : /// @param[in]  buf  Buffer to get b:changedtick from.</span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">          24 : static inline varnumber_T buf_get_changedtick(const buf_T *const buf)</span></span>
+<span id="L85"><span class="lineNum">      85</span>              :   FUNC_ATTR_NONNULL_ALL FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_PURE</span>
+<span id="L86"><span class="lineNum">      86</span>              :   FUNC_ATTR_WARN_UNUSED_RESULT</span>
+<span id="L87"><span class="lineNum">      87</span>              : {</span>
+<span id="L88"><span class="lineNum">      88</span> <span class="tlaGNC">          24 :   return buf-&gt;changedtick_di.di_tv.vval.v_number;</span></span>
+<span id="L89"><span class="lineNum">      89</span>              : }</span>
+<span id="L90"><span class="lineNum">      90</span>              : </span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaUNC">           0 : static inline uint32_t buf_meta_total(const buf_T *b, MetaIndex m)</span></span>
+<span id="L92"><span class="lineNum">      92</span>              : {</span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaUNC">           0 :   return b-&gt;b_marktree-&gt;meta_root[m];</span></span>
+<span id="L94"><span class="lineNum">      94</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

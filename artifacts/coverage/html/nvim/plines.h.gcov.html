@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - nvim_unittest.info - nvim/plines.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory nvim">nvim</a> - plines.h<span style="font-size: 80%;"> (source / <a href="plines.h.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">nvim_unittest.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-08-26 13:15:22</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #pragma once</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;stdbool.h&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;stdint.h&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : </span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &quot;nvim/marktree_defs.h&quot;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;nvim/pos_defs.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;nvim/types_defs.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : typedef bool CSType;</span>
+<span id="L11"><span class="lineNum">      11</span>              : </span>
+<span id="L12"><span class="lineNum">      12</span>              : enum {</span>
+<span id="L13"><span class="lineNum">      13</span>              :   kCharsizeRegular,</span>
+<span id="L14"><span class="lineNum">      14</span>              :   kCharsizeFast,</span>
+<span id="L15"><span class="lineNum">      15</span>              : };</span>
+<span id="L16"><span class="lineNum">      16</span>              : </span>
+<span id="L17"><span class="lineNum">      17</span>              : /// Argument for char size functions.</span>
+<span id="L18"><span class="lineNum">      18</span>              : typedef struct {</span>
+<span id="L19"><span class="lineNum">      19</span>              :   win_T *win;</span>
+<span id="L20"><span class="lineNum">      20</span>              :   char *line;                ///&lt; Start of the line.</span>
+<span id="L21"><span class="lineNum">      21</span>              : </span>
+<span id="L22"><span class="lineNum">      22</span>              :   bool use_tabstop;          ///&lt; Use 'tabstop' instead of char2cells() for a TAB.</span>
+<span id="L23"><span class="lineNum">      23</span>              :   int indent_width;          ///&lt; Width of 'showbreak' and 'breakindent' on wrapped</span>
+<span id="L24"><span class="lineNum">      24</span>              :                              ///&lt; parts of lines, INT_MIN if not yet calculated.</span>
+<span id="L25"><span class="lineNum">      25</span>              : </span>
+<span id="L26"><span class="lineNum">      26</span>              :   int virt_row;              ///&lt; Row for virtual text, -1 if no virtual text.</span>
+<span id="L27"><span class="lineNum">      27</span>              :   int cur_text_width_left;   ///&lt; Width of virtual text left of cursor.</span>
+<span id="L28"><span class="lineNum">      28</span>              :   int cur_text_width_right;  ///&lt; Width of virtual text right of cursor.</span>
+<span id="L29"><span class="lineNum">      29</span>              : </span>
+<span id="L30"><span class="lineNum">      30</span>              :   int max_head_vcol;         ///&lt; See charsize_regular().</span>
+<span id="L31"><span class="lineNum">      31</span>              :   MarkTreeIter iter[1];</span>
+<span id="L32"><span class="lineNum">      32</span>              : } CharsizeArg;</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span>              : typedef struct {</span>
+<span id="L35"><span class="lineNum">      35</span>              :   int width;</span>
+<span id="L36"><span class="lineNum">      36</span>              :   int head;  ///&lt; Size of 'breakindent' etc. before the character (included in width).</span>
+<span id="L37"><span class="lineNum">      37</span>              : } CharSize;</span>
+<span id="L38"><span class="lineNum">      38</span>              : </span>
+<span id="L39"><span class="lineNum">      39</span>              : #include &quot;plines.h.generated.h&quot;</span>
+<span id="L40"><span class="lineNum">      40</span>              : #include &quot;plines.h.inline.generated.h&quot;</span>
+<span id="L41"><span class="lineNum">      41</span>              : </span>
+<span id="L42"><span class="lineNum">      42</span>              : /// Get the number of cells taken up on the screen by the given character at vcol.</span>
+<span id="L43"><span class="lineNum">      43</span>              : /// &quot;csarg-&gt;cur_text_width_left&quot; and &quot;csarg-&gt;cur_text_width_right&quot; are set</span>
+<span id="L44"><span class="lineNum">      44</span>              : /// to the extra size for inline virtual text.</span>
+<span id="L45"><span class="lineNum">      45</span>              : ///</span>
+<span id="L46"><span class="lineNum">      46</span>              : /// When &quot;csarg-&gt;max_head_vcol&quot; is positive, only count in &quot;head&quot; the size</span>
+<span id="L47"><span class="lineNum">      47</span>              : /// of 'showbreak'/'breakindent' before &quot;csarg-&gt;max_head_vcol&quot;.</span>
+<span id="L48"><span class="lineNum">      48</span>              : /// When &quot;csarg-&gt;max_head_vcol&quot; is negative, only count in &quot;head&quot; the size</span>
+<span id="L49"><span class="lineNum">      49</span>              : /// of 'showbreak'/'breakindent' before where cursor should be placed.</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaUNC">           0 : static inline CharSize win_charsize(CSType cstype, int vcol, char *ptr, int32_t chr,</span></span>
+<span id="L51"><span class="lineNum">      51</span>              :                                     CharsizeArg *csarg)</span>
+<span id="L52"><span class="lineNum">      52</span>              :   FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_ALWAYS_INLINE</span>
+<span id="L53"><span class="lineNum">      53</span>              : {</span>
+<span id="L54"><span class="lineNum">      54</span> <span class="tlaUNC">           0 :   if (cstype == kCharsizeFast) {</span></span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaUNC">           0 :     return charsize_fast(csarg, ptr, vcol, chr);</span></span>
+<span id="L56"><span class="lineNum">      56</span>              :   } else {</span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaUNC">           0 :     return charsize_regular(csarg, ptr, vcol, chr);</span></span>
+<span id="L58"><span class="lineNum">      58</span>              :   }</span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L60"><span class="lineNum">      60</span>              : </span>
+<span id="L61"><span class="lineNum">      61</span>              : /// Return the number of cells the string &quot;s&quot; will take on the screen,</span>
+<span id="L62"><span class="lineNum">      62</span>              : /// taking into account the size of a tab.</span>
+<span id="L63"><span class="lineNum">      63</span>              : ///</span>
+<span id="L64"><span class="lineNum">      64</span>              : /// @param s</span>
+<span id="L65"><span class="lineNum">      65</span>              : ///</span>
+<span id="L66"><span class="lineNum">      66</span>              : /// @return Number of cells the string will take on the screen.</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaUNC">           0 : static inline int linetabsize_str(char *s)</span></span>
+<span id="L68"><span class="lineNum">      68</span>              :   FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_ALWAYS_INLINE</span>
+<span id="L69"><span class="lineNum">      69</span>              : {</span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaUNC">           0 :   return linetabsize_col(0, s);</span></span>
+<span id="L71"><span class="lineNum">      71</span>              : }</span>
+<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L73"><span class="lineNum">      73</span>              : /// Like linetabsize_str(), but for a given window instead of the current one.</span>
+<span id="L74"><span class="lineNum">      74</span>              : /// Doesn't count the size of 'listchars' &quot;eol&quot;.</span>
+<span id="L75"><span class="lineNum">      75</span>              : ///</span>
+<span id="L76"><span class="lineNum">      76</span>              : /// @param wp</span>
+<span id="L77"><span class="lineNum">      77</span>              : /// @param line</span>
+<span id="L78"><span class="lineNum">      78</span>              : /// @param len</span>
+<span id="L79"><span class="lineNum">      79</span>              : ///</span>
+<span id="L80"><span class="lineNum">      80</span>              : /// @return Number of cells the string will take on the screen.</span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaUNC">           0 : static inline int win_linetabsize(win_T *wp, linenr_T lnum, char *line, colnr_T len)</span></span>
+<span id="L82"><span class="lineNum">      82</span>              :   FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_ALWAYS_INLINE</span>
+<span id="L83"><span class="lineNum">      83</span>              : {</span>
+<span id="L84"><span class="lineNum">      84</span>              :   CharsizeArg csarg;</span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaUNC">           0 :   CSType const cstype = init_charsize_arg(&amp;csarg, wp, lnum, line);</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaUNC">           0 :   if (cstype == kCharsizeFast) {</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaUNC">           0 :     return linesize_fast(&amp;csarg, 0, len);</span></span>
+<span id="L88"><span class="lineNum">      88</span>              :   } else {</span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaUNC">           0 :     return linesize_regular(&amp;csarg, 0, len);</span></span>
+<span id="L90"><span class="lineNum">      90</span>              :   }</span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaUNC">           0 : }</span></span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

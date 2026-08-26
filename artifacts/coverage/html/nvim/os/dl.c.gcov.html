@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - nvim_unittest.info - nvim/os/dl.c</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory nvim/os">nvim/os</a> - dl.c<span style="font-size: 80%;"> (source / <a href="dl.c.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">nvim_unittest.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-08-26 13:15:22</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : /// Functions for using external native libraries</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;stdbool.h&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;stddef.h&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;stdint.h&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &lt;uv.h&gt;</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;nvim/gettext_defs.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;nvim/memory.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;nvim/message.h&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;nvim/os/dl.h&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : /// possible function prototypes that can be called by os_libcall()</span>
+<span id="L14"><span class="lineNum">      14</span>              : /// int -&gt; int</span>
+<span id="L15"><span class="lineNum">      15</span>              : /// int -&gt; string</span>
+<span id="L16"><span class="lineNum">      16</span>              : /// string -&gt; string</span>
+<span id="L17"><span class="lineNum">      17</span>              : /// string -&gt; int</span>
+<span id="L18"><span class="lineNum">      18</span>              : typedef void (*gen_fn)(void);</span>
+<span id="L19"><span class="lineNum">      19</span>              : typedef const char *(*str_str_fn)(const char *str);</span>
+<span id="L20"><span class="lineNum">      20</span>              : typedef int (*str_int_fn)(const char *str);</span>
+<span id="L21"><span class="lineNum">      21</span>              : typedef const char *(*int_str_fn)(int i);</span>
+<span id="L22"><span class="lineNum">      22</span>              : typedef int (*int_int_fn)(int i);</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              : /// os_libcall - call a function in a dynamic loadable library</span>
+<span id="L25"><span class="lineNum">      25</span>              : ///</span>
+<span id="L26"><span class="lineNum">      26</span>              : /// an example of calling a function that takes a string and returns an int:</span>
+<span id="L27"><span class="lineNum">      27</span>              : ///</span>
+<span id="L28"><span class="lineNum">      28</span>              : ///   int int_out = 0;</span>
+<span id="L29"><span class="lineNum">      29</span>              : ///   os_libcall(&quot;mylib.so&quot;, &quot;somefn&quot;, &quot;string-argument&quot;, 0, NULL, &amp;int_out);</span>
+<span id="L30"><span class="lineNum">      30</span>              : ///</span>
+<span id="L31"><span class="lineNum">      31</span>              : /// @param libname the name of the library to load (e.g.: libsomething.so)</span>
+<span id="L32"><span class="lineNum">      32</span>              : /// @param funcname the name of the library function (e.g.: myfunc)</span>
+<span id="L33"><span class="lineNum">      33</span>              : /// @param argv the input string, NULL when using `argi`</span>
+<span id="L34"><span class="lineNum">      34</span>              : /// @param argi the input integer, not used when using `argv` != NULL</span>
+<span id="L35"><span class="lineNum">      35</span>              : /// @param[out] str_out an allocated output string, caller must free if</span>
+<span id="L36"><span class="lineNum">      36</span>              : ///             not NULL. NULL when using `int_out`.</span>
+<span id="L37"><span class="lineNum">      37</span>              : /// @param[out] int_out the output integer param</span>
+<span id="L38"><span class="lineNum">      38</span>              : /// @return true on success, false on failure</span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaUNC">           0 : bool os_libcall(const char *libname, const char *funcname, const char *argv, int argi,</span></span>
+<span id="L40"><span class="lineNum">      40</span>              :                 char **str_out, int *int_out)</span>
+<span id="L41"><span class="lineNum">      41</span>              : {</span>
+<span id="L42"><span class="lineNum">      42</span> <span class="tlaUNC">           0 :   if (!libname || !funcname) {</span></span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 :     return false;</span></span>
+<span id="L44"><span class="lineNum">      44</span>              :   }</span>
+<span id="L45"><span class="lineNum">      45</span>              : </span>
+<span id="L46"><span class="lineNum">      46</span>              :   uv_lib_t lib;</span>
+<span id="L47"><span class="lineNum">      47</span>              : </span>
+<span id="L48"><span class="lineNum">      48</span>              :   // open the dynamic loadable library</span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaUNC">           0 :   if (uv_dlopen(libname, &amp;lib)) {</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaUNC">           0 :     semsg(_(&quot;dlerror = \&quot;%s\&quot;&quot;), uv_dlerror(&amp;lib));</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaUNC">           0 :     uv_dlclose(&amp;lib);</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaUNC">           0 :     return false;</span></span>
+<span id="L53"><span class="lineNum">      53</span>              :   }</span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span>              :   // find and load the requested function in the library</span>
+<span id="L56"><span class="lineNum">      56</span>              :   gen_fn fn;</span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaUNC">           0 :   if (uv_dlsym(&amp;lib, funcname, (void **)&amp;fn)) {</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaUNC">           0 :     semsg(_(&quot;dlerror = \&quot;%s\&quot;&quot;), uv_dlerror(&amp;lib));</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaUNC">           0 :     uv_dlclose(&amp;lib);</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaUNC">           0 :     return false;</span></span>
+<span id="L61"><span class="lineNum">      61</span>              :   }</span>
+<span id="L62"><span class="lineNum">      62</span>              : </span>
+<span id="L63"><span class="lineNum">      63</span>              :   // call the library and save the result</span>
+<span id="L64"><span class="lineNum">      64</span>              :   // TODO(aktau): catch signals and use jmp (if available) to handle</span>
+<span id="L65"><span class="lineNum">      65</span>              :   // exceptions. jmp's on Unix seem to interact trickily with signals as</span>
+<span id="L66"><span class="lineNum">      66</span>              :   // well. So for now we only support those libraries that are well-behaved.</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaUNC">           0 :   if (str_out) {</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaUNC">           0 :     str_str_fn sfn = (str_str_fn)fn;</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaUNC">           0 :     int_str_fn ifn = (int_str_fn)fn;</span></span>
+<span id="L70"><span class="lineNum">      70</span>              : </span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaUNC">           0 :     const char *res = argv ? sfn(argv) : ifn(argi);</span></span>
+<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L73"><span class="lineNum">      73</span>              :     // assume that ptr values of NULL, 1 or -1 are illegal</span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaUNC">           0 :     *str_out = (res &amp;&amp; (intptr_t)res != 1 &amp;&amp; (intptr_t)res != -1)</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaUNC">           0 :                ? xstrdup(res) : NULL;</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaUNC">           0 :   } else {</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaUNC">           0 :     str_int_fn sfn = (str_int_fn)fn;</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaUNC">           0 :     int_int_fn ifn = (int_int_fn)fn;</span></span>
+<span id="L79"><span class="lineNum">      79</span> <span class="tlaUNC">           0 :     *int_out = argv ? sfn(argv) : ifn(argi);</span></span>
+<span id="L80"><span class="lineNum">      80</span>              :   }</span>
+<span id="L81"><span class="lineNum">      81</span>              : </span>
+<span id="L82"><span class="lineNum">      82</span>              :   // free the library</span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaUNC">           0 :   uv_dlclose(&amp;lib);</span></span>
+<span id="L84"><span class="lineNum">      84</span>              : </span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaUNC">           0 :   return true;</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaUNC">           0 : }</span></span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

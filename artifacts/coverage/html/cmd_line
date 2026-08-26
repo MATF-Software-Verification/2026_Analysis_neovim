@@ -1,0 +1,1 @@
+genhtml ../2026_Analysis_neovim/artifacts/coverage/nvim_unittest.info --output-directory ../2026_Analysis_neovim/artifacts/coverage/html --ignore-errors category,inconsistent

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - nvim_unittest.info - nvim/option.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory nvim">nvim</a> - option.h<span style="font-size: 80%;"> (source / <a href="option.h.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">nvim_unittest.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-08-26 13:15:22</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #pragma once</span>
+<span id="L2"><span class="lineNum">       2</span>              : </span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;stdio.h&gt;  // IWYU pragma: keep</span>
+<span id="L4"><span class="lineNum">       4</span>              : </span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &quot;nvim/api/private/defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L6"><span class="lineNum">       6</span>              : #include &quot;nvim/api/private/helpers.h&quot;</span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;nvim/cmdexpand_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;nvim/eval/typval_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;nvim/ex_cmds_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;nvim/macros_defs.h&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;nvim/option_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &quot;nvim/types_defs.h&quot;  // IWYU pragma: keep</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : /// flags for buf_copy_options()</span>
+<span id="L15"><span class="lineNum">      15</span>              : enum {</span>
+<span id="L16"><span class="lineNum">      16</span>              :   BCO_ENTER  = 1,  ///&lt; going to enter the buffer</span>
+<span id="L17"><span class="lineNum">      17</span>              :   BCO_ALWAYS = 2,  ///&lt; always copy the options</span>
+<span id="L18"><span class="lineNum">      18</span>              :   BCO_NOHELP = 4,  ///&lt; don't touch the help related options</span>
+<span id="L19"><span class="lineNum">      19</span>              : };</span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span>              : /// Flags for option-setting functions</span>
+<span id="L22"><span class="lineNum">      22</span>              : ///</span>
+<span id="L23"><span class="lineNum">      23</span>              : /// When OPT_GLOBAL and OPT_LOCAL are both missing, set both local and global</span>
+<span id="L24"><span class="lineNum">      24</span>              : /// values, get local value.</span>
+<span id="L25"><span class="lineNum">      25</span>              : typedef enum {</span>
+<span id="L26"><span class="lineNum">      26</span>              :   OPT_GLOBAL    = 0x01,  ///&lt; Use global value.</span>
+<span id="L27"><span class="lineNum">      27</span>              :   OPT_LOCAL     = 0x02,  ///&lt; Use local value.</span>
+<span id="L28"><span class="lineNum">      28</span>              :   OPT_MODELINE  = 0x04,  ///&lt; Option in modeline.</span>
+<span id="L29"><span class="lineNum">      29</span>              :   OPT_WINONLY   = 0x08,  ///&lt; Only set window-local options.</span>
+<span id="L30"><span class="lineNum">      30</span>              :   OPT_NOWIN     = 0x10,  ///&lt; Don’t set window-local options.</span>
+<span id="L31"><span class="lineNum">      31</span>              :   OPT_ONECOLUMN = 0x20,  ///&lt; list options one per line</span>
+<span id="L32"><span class="lineNum">      32</span>              :   OPT_NO_REDRAW = 0x40,  ///&lt; ignore redraw flags on option</span>
+<span id="L33"><span class="lineNum">      33</span>              :   OPT_SKIPRTP   = 0x80,  ///&lt; &quot;skiprtp&quot; in 'sessionoptions'</span>
+<span id="L34"><span class="lineNum">      34</span>              : } OptionSetFlags;</span>
+<span id="L35"><span class="lineNum">      35</span>              : </span>
+<span id="L36"><span class="lineNum">      36</span>              : /// Get name of OptValType as a string.</span>
+<span id="L37"><span class="lineNum">      37</span> <span class="tlaUNC">           0 : static inline const char *optval_type_get_name(const OptValType type)</span></span>
+<span id="L38"><span class="lineNum">      38</span>              : {</span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaUNC">           0 :   switch (type) {</span></span>
+<span id="L40"><span class="lineNum">      40</span>              :   case kOptValTypeNil:</span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaUNC">           0 :     return &quot;nil&quot;;</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :   case kOptValTypeBoolean:</span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaUNC">           0 :     return &quot;boolean&quot;;</span></span>
+<span id="L44"><span class="lineNum">      44</span>              :   case kOptValTypeNumber:</span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaUNC">           0 :     return &quot;number&quot;;</span></span>
+<span id="L46"><span class="lineNum">      46</span>              :   case kOptValTypeString:</span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaUNC">           0 :     return &quot;string&quot;;</span></span>
+<span id="L48"><span class="lineNum">      48</span>              :   }</span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaUNC">           0 :   UNREACHABLE;</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L51"><span class="lineNum">      51</span>              : </span>
+<span id="L52"><span class="lineNum">      52</span>              : // OptVal helper macros.</span>
+<span id="L53"><span class="lineNum">      53</span>              : #define NIL_OPTVAL ((OptVal) { .type = kOptValTypeNil })</span>
+<span id="L54"><span class="lineNum">      54</span>              : #define BOOLEAN_OPTVAL(b) ((OptVal) { .type = kOptValTypeBoolean, .data.boolean = b })</span>
+<span id="L55"><span class="lineNum">      55</span>              : #define NUMBER_OPTVAL(n) ((OptVal) { .type = kOptValTypeNumber, .data.number = n })</span>
+<span id="L56"><span class="lineNum">      56</span>              : #define STRING_OPTVAL(s) ((OptVal) { .type = kOptValTypeString, .data.string = s })</span>
+<span id="L57"><span class="lineNum">      57</span>              : </span>
+<span id="L58"><span class="lineNum">      58</span>              : #define CSTR_AS_OPTVAL(s) STRING_OPTVAL(cstr_as_string(s))</span>
+<span id="L59"><span class="lineNum">      59</span>              : #define CSTR_TO_OPTVAL(s) STRING_OPTVAL(cstr_to_string(s))</span>
+<span id="L60"><span class="lineNum">      60</span>              : #define STATIC_CSTR_AS_OPTVAL(s) STRING_OPTVAL(STATIC_CSTR_AS_STRING(s))</span>
+<span id="L61"><span class="lineNum">      61</span>              : #define STATIC_CSTR_TO_OPTVAL(s) STRING_OPTVAL(STATIC_CSTR_TO_STRING(s))</span>
+<span id="L62"><span class="lineNum">      62</span>              : </span>
+<span id="L63"><span class="lineNum">      63</span>              : #include &quot;option.h.generated.h&quot;</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

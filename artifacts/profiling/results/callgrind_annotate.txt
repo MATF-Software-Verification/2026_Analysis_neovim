@@ -1,0 +1,200 @@
+--------------------------------------------------------------------------------
+Profile data file 'callgrind.out' (creator: callgrind-3.22.0)
+--------------------------------------------------------------------------------
+I1 cache: 
+D1 cache: 
+LL cache: 
+Timerange: Basic block 0 - 35011898
+Trigger: Program termination
+Profiled target:  /work/neovim/build/bin/nvim --headless -u NONE -l /work/workload.lua (PID 5003, part 1)
+Events recorded:  Ir
+Events shown:     Ir
+Event sort order: Ir
+Thresholds:       99
+Include dirs:     
+User annotated:   
+Auto-annotation:  off
+
+--------------------------------------------------------------------------------
+Ir                   
+--------------------------------------------------------------------------------
+261,332,646 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+Ir                   file:function
+--------------------------------------------------------------------------------
+53,701,596 (20.55%)  /work/neovim/src/nvim/map_key_impl.c.h:mh_find_bucket_int64_t'2 [/work/neovim/build/bin/nvim]
+33,710,376 (12.90%)  /work/neovim/src/nvim/memline.c:ml_find_line'2 [/work/neovim/build/bin/nvim]
+14,503,497 ( 5.55%)  /work/neovim/src/nvim/map_key_impl.c.h:mh_find_bucket_int64_t [/work/neovim/build/bin/nvim]
+ 7,764,033 ( 2.97%)  /work/neovim/src/nvim/marktree.c:key_cmp'2 [/work/neovim/build/bin/nvim]
+ 6,450,320 ( 2.47%)  /work/neovim/src/nvim/marktree.c:marktree_getp_aux'2 [/work/neovim/build/bin/nvim]
+ 5,102,601 ( 1.95%)  /work/neovim/src/nvim/mbyte.c:utfc_ptr2len'2 [/work/neovim/build/bin/nvim]
+ 4,373,779 ( 1.67%)  /work/neovim/src/nvim/undo.c:u_savecommon'2 [/work/neovim/build/bin/nvim]
+ 4,177,002 ( 1.60%)  ./malloc/./malloc/malloc.c:_int_malloc'2 [/usr/lib/aarch64-linux-gnu/libc.so.6]
+ 4,106,446 ( 1.57%)  /work/neovim/src/nvim/memline.c:ml_find_line_or_offset'2 [/work/neovim/build/bin/nvim]
+ 3,373,208 ( 1.29%)  /work/neovim/src/nvim/memline.c:ml_find_line [/work/neovim/build/bin/nvim]
+ 3,289,081 ( 1.26%)  /work/neovim/src/nvim/mbyte.c:utf_ptr2len'2 [/work/neovim/build/bin/nvim]
+ 3,228,676 ( 1.24%)  ./string/../sysdeps/aarch64/multiarch/strlen_asimd.S:__strlen_asimd [/usr/lib/aarch64-linux-gnu/libc.so.6]
+ 2,634,090 ( 1.01%)  /work/neovim/src/nvim/mbyte.c:utf_ptr2char'2 [/work/neovim/build/bin/nvim]
+ 2,497,739 ( 0.96%)  ./malloc/./malloc/malloc.c:malloc [/usr/lib/aarch64-linux-gnu/libc.so.6]
+ 2,429,463 ( 0.93%)  /work/neovim/src/nvim/map_value_impl.c.h:mh_put_int64_t
+ 2,360,482 ( 0.90%)  /work/neovim/src/nvim/map_value_impl.c.h:mh_delete_int64_t
+ 2,240,000 ( 0.86%)  /work/neovim/src/nvim/regexp.c:vim_regsub_both'2 [/work/neovim/build/bin/nvim]
+ 2,212,241 ( 0.85%)  ./malloc/./malloc/malloc.c:_int_free [/usr/lib/aarch64-linux-gnu/libc.so.6]
+ 2,132,693 ( 0.82%)  /work/neovim/src/nvim/marktree.c:key_cmp [/work/neovim/build/bin/nvim]
+ 1,948,743 ( 0.75%)  ./malloc/./malloc/malloc.c:_int_malloc [/usr/lib/aarch64-linux-gnu/libc.so.6]
+ 1,823,170 ( 0.70%)  /work/neovim/src/nvim/memfile.c:mf_put [/work/neovim/build/bin/nvim]
+ 1,712,074 ( 0.66%)  /work/neovim/src/nvim/ex_cmds.c:do_sub'2 [/work/neovim/build/bin/nvim]
+ 1,709,431 ( 0.65%)  /work/neovim/src/nvim/memline.c:mf_get
+ 1,544,279 ( 0.59%)  /work/neovim/src/nvim/regexp.c:utf_ptr2char'2
+ 1,522,475 ( 0.58%)  /work/neovim/src/nvim/marktree.c:pos_leq [/work/neovim/build/bin/nvim]
+ 1,440,000 ( 0.55%)  /work/neovim/src/nvim/regexp.c:nfa_regexec_both'2 [/work/neovim/build/bin/nvim]
+ 1,398,573 ( 0.54%)  /work/neovim/src/nvim/api/private/helpers.c:api_luarefs_free_keydict'2 [/work/neovim/build/bin/nvim]
+ 1,353,156 ( 0.52%)  /work/neovim/src/nvim/marktree.c:marktree_getp_aux [/work/neovim/build/bin/nvim]
+ 1,327,036 ( 0.51%)  /work/neovim/src/nvim/memline.c:ml_get_buf_impl [/work/neovim/build/bin/nvim]
+ 1,177,854 ( 0.45%)  /work/neovim/src/nvim/memline.c:mf_get'2
+ 1,116,380 ( 0.43%)  /work/neovim/src/nvim/map_key_impl.c.h:mh_put_int64_t [/work/neovim/build/bin/nvim]
+ 1,116,288 ( 0.43%)  /work/neovim/src/nvim/map_value_impl.c.h:map_put_ref_int64_t_ptr_t [/work/neovim/build/bin/nvim]
+ 1,064,150 ( 0.41%)  /work/neovim/src/nvim/regexp.c:utf_ptr2len'2
+ 1,040,000 ( 0.40%)  /work/neovim/src/nvim/regexp.c:init_regexec_multi [/work/neovim/build/bin/nvim]
+   976,000 ( 0.37%)  /work/neovim/src/nvim/regexp.c:prog_magic_wrong [/work/neovim/build/bin/nvim]
+   944,114 ( 0.36%)  /work/neovim/src/nvim/ex_cmds.c:utfc_ptr2len'2
+   939,834 ( 0.36%)  ./malloc/./malloc/malloc.c:free [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   930,004 ( 0.36%)  ./string/../sysdeps/aarch64/multiarch/../memcpy.S:__GI_memcpy [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   928,128 ( 0.36%)  /work/neovim/src/nvim/regexp.c:utf_char2len'2
+   918,330 ( 0.35%)  /work/neovim/src/nvim/map_key_impl.c.h:mh_delete_int64_t [/work/neovim/build/bin/nvim]
+   917,472 ( 0.35%)  /work/neovim/src/nvim/marktree.c:marktree_itr_get_ext'2 [/work/neovim/build/bin/nvim]
+   912,000 ( 0.35%)  /work/neovim/src/nvim/regexp.c:reg_getline_common [/work/neovim/build/bin/nvim]
+   911,958 ( 0.35%)  /work/neovim/src/nvim/marktree.c:marktree_itr_get_ext [/work/neovim/build/bin/nvim]
+   911,886 ( 0.35%)  /work/neovim/src/nvim/regexp.c:vim_regsub_multi'2 [/work/neovim/build/bin/nvim]
+   852,735 ( 0.33%)  /work/neovim/src/nvim/memfile.c:map_del_int64_t_ptr_t
+   799,888 ( 0.31%)  /work/neovim/src/nvim/extmark.c:marktree_splice
+   787,152 ( 0.30%)  /work/neovim/src/nvim/map_key_impl.c.h:mh_get_int64_t [/work/neovim/build/bin/nvim]
+   787,140 ( 0.30%)  /work/neovim/src/nvim/memfile.c:map_get_int64_t_ptr_t
+   768,000 ( 0.29%)  /work/neovim/src/nvim/regexp.c:nfa_regexec_multi [/work/neovim/build/bin/nvim]
+   761,649 ( 0.29%)  /work/neovim/src/nvim/lua/converter.c:nlua_pop_Object'2 [/work/neovim/build/bin/nvim]
+   751,808 ( 0.29%)  /work/neovim/src/nvim/marktree.c:unrelative'2 [/work/neovim/build/bin/nvim]
+   735,896 ( 0.28%)  /work/neovim/src/nvim/ex_cmds.c:vim_regexec_multi'2
+   721,556 ( 0.28%)  /work/neovim/src/nvim/map_defs.h:mh_get_int64_t
+   720,000 ( 0.28%)  /work/neovim/src/nvim/regexp.c:vim_regsub_both [/work/neovim/build/bin/nvim]
+   719,910 ( 0.28%)  /work/neovim/src/nvim/regexp.c:vim_regexec_multi'2 [/work/neovim/build/bin/nvim]
+   719,820 ( 0.28%)  /work/neovim/src/nvim/ex_cmds.c:xstrnsave'2
+   717,753 ( 0.27%)  /work/neovim/src/nvim/marktree.c:relative [/work/neovim/build/bin/nvim]
+   704,872 ( 0.27%)  /work/neovim/.deps/build/src/luajit/src/lj_api.c:index2adr [/work/neovim/build/bin/nvim]
+   671,419 ( 0.26%)  /work/neovim/.deps/build/src/luajit/src/lj_str.c:lj_str_new'2 [/work/neovim/build/bin/nvim]
+   661,470 ( 0.25%)  /work/neovim/src/nvim/memory.c:try_malloc [/work/neovim/build/bin/nvim]
+   656,640 ( 0.25%)  /work/neovim/src/nvim/map_defs.h:map_put_int64_t_ptr_t [/work/neovim/build/bin/nvim]
+   632,000 ( 0.24%)  /work/neovim/src/nvim/regexp.c:skip_to_start [/work/neovim/build/bin/nvim]
+   627,432 ( 0.24%)  /work/neovim/src/nvim/memory.c:xfree'2 [/work/neovim/build/bin/nvim]
+   624,110 ( 0.24%)  /work/neovim/src/nvim/mbyte.c:utf_char2len'2 [/work/neovim/build/bin/nvim]
+   623,789 ( 0.24%)  /work/neovim/src/nvim/memfile.c:mf_get [/work/neovim/build/bin/nvim]
+   622,550 ( 0.24%)  /work/neovim/src/nvim/memline.c:ml_add_stack [/work/neovim/build/bin/nvim]
+   622,516 ( 0.24%)  /work/neovim/src/nvim/memfile.c:mf_get'2 [/work/neovim/build/bin/nvim]
+   607,544 ( 0.23%)  /work/neovim/src/nvim/marktree.c:marktree_itr_pos [/work/neovim/build/bin/nvim]
+   601,188 ( 0.23%)  /work/neovim/src/nvim/strings.c:vim_strchr'2 [/work/neovim/build/bin/nvim]
+   592,000 ( 0.23%)  /work/neovim/src/nvim/regexp.c:nfa_regexec_both [/work/neovim/build/bin/nvim]
+   590,355 ( 0.23%)  /work/neovim/src/nvim/map_value_impl.c.h:map_del_int64_t_ptr_t [/work/neovim/build/bin/nvim]
+   575,928 ( 0.22%)  /work/neovim/src/nvim/ex_cmds.c:vim_regsub_multi'2
+   574,212 ( 0.22%)  /work/neovim/src/nvim/map.c:hash_cstr_t'2 [/work/neovim/build/bin/nvim]
+   573,926 ( 0.22%)  ./string/../sysdeps/aarch64/strchr.S:index [/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1]
+   558,980 ( 0.21%)  /work/neovim/.deps/build/src/luajit/src/lj_gc.c:propagatemark'2 [/work/neovim/build/bin/nvim]
+   536,000 ( 0.21%)  /work/neovim/src/nvim/regexp.c:cleanup_subexpr [/work/neovim/build/bin/nvim]
+   511,884 ( 0.20%)  /work/neovim/src/nvim/ex_cmds.c:xfree'2
+   500,400 ( 0.19%)  /work/neovim/src/nvim/marktree.c:compose [/work/neovim/build/bin/nvim]
+   495,882 ( 0.19%)  /work/neovim/src/nvim/ex_cmds.c:sub_grow_buf'2 [/work/neovim/build/bin/nvim]
+   488,741 ( 0.19%)  ./string/../sysdeps/aarch64/nptl/../memset.S:__GI_memset [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   475,671 ( 0.18%)  /work/neovim/src/nvim/marktree.c:relative'2 [/work/neovim/build/bin/nvim]
+   472,000 ( 0.18%)  /work/neovim/src/nvim/regexp.c:reg_getline [/work/neovim/build/bin/nvim]
+   471,951 ( 0.18%)  /work/neovim/src/nvim/memory.c:xmallocz [/work/neovim/build/bin/nvim]
+   464,194 ( 0.18%)  /work/neovim/src/nvim/mbyte.c:utf_char2bytes'2 [/work/neovim/build/bin/nvim]
+   463,656 ( 0.18%)  /work/neovim/src/nvim/memline.c:ml_updatechunk [/work/neovim/build/bin/nvim]
+   459,339 ( 0.18%)  /work/neovim/.deps/build/src/luajit/src/lj_strfmt.c:lj_strfmt_putfxint'2 [/work/neovim/build/bin/nvim]
+   459,172 ( 0.18%)  /work/neovim/src/nvim/map_defs.h:map_get_int64_t_ptr_t [/work/neovim/build/bin/nvim]
+   456,817 ( 0.17%)  /work/neovim/src/nvim/mbyte.c:utf_ptr2len [/work/neovim/build/bin/nvim]
+   424,047 ( 0.16%)  /work/neovim/src/nvim/extmark.c:extmark_splice_delete [/work/neovim/build/bin/nvim]
+   415,951 ( 0.16%)  /work/neovim/src/nvim/marktree.c:marktree_splice'2 [/work/neovim/build/bin/nvim]
+   405,889 ( 0.16%)  /work/neovim/src/nvim/memline.c:ml_flush_line [/work/neovim/build/bin/nvim]
+   403,574 ( 0.15%)  ./string/../sysdeps/aarch64/multiarch/../memchr.S:__GI_memchr [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   403,418 ( 0.15%)  ./malloc/./malloc/malloc.c:calloc [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   399,674 ( 0.15%)  /work/neovim/src/nvim/marktree.c:pos_leq'2 [/work/neovim/build/bin/nvim]
+   397,837 ( 0.15%)  /work/neovim/.deps/build/src/luajit/src/lj_alloc.c:lj_alloc_malloc [/work/neovim/build/bin/nvim]
+   393,984 ( 0.15%)  /work/neovim/src/nvim/map_defs.h:map_put_ref_int64_t_ptr_t
+   392,386 ( 0.15%)  /work/neovim/src/nvim/mbyte.c:utf_ptr2char [/work/neovim/build/bin/nvim]
+   392,079 ( 0.15%)  /work/neovim/src/nvim/regexp.c:utf_char2len
+   386,962 ( 0.15%)  /work/neovim/src/nvim/memory.c:try_malloc'2 [/work/neovim/build/bin/nvim]
+   368,797 ( 0.14%)  ./string/../sysdeps/aarch64/strnlen.S:strnlen [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   360,053 ( 0.14%)  /work/neovim/src/nvim/extmark.c:extmark_splice_impl [/work/neovim/build/bin/nvim]
+   351,900 ( 0.13%)  /work/neovim/src/nvim/ex_cmds.c:profile_passed_limit'2
+   350,050 ( 0.13%)  /work/neovim/src/nvim/map_key_impl.c.h:mh_find_bucket_uint64_t'2 [/work/neovim/build/bin/nvim]
+   339,000 ( 0.13%)  /work/neovim/src/nvim/api/extmark.c:nvim_buf_set_extmark'2 [/work/neovim/build/bin/nvim]
+   336,210 ( 0.13%)  /work/neovim/src/nvim/ex_eval.c:aborting [/work/neovim/build/bin/nvim]
+   336,042 ( 0.13%)  /work/neovim/src/nvim/undo.c:u_force_get_undo_header [/work/neovim/build/bin/nvim]
+   327,918 ( 0.13%)  /work/neovim/src/nvim/ex_cmds.c:xrealloc'2
+   326,323 ( 0.12%)  /work/neovim/src/nvim/memline.c:ml_get_buf [/work/neovim/build/bin/nvim]
+   325,234 ( 0.12%)  /work/neovim/.deps/build/src/luajit/src/lj_gc.c:gc_onestep'2 [/work/neovim/build/bin/nvim]
+   319,237 ( 0.12%)  /work/neovim/src/nvim/marktree.c:marktree_putp_aux'2 [/work/neovim/build/bin/nvim]
+   318,743 ( 0.12%)  /work/neovim/src/nvim/strings.c:vim_memcpy_up'2 [/work/neovim/build/bin/nvim]
+   317,159 ( 0.12%)  /work/neovim/src/nvim/menu.c:menu_namecmp'2 [/work/neovim/build/bin/nvim]
+   312,117 ( 0.12%)  /work/neovim/src/nvim/undo.c:u_savecommon [/work/neovim/build/bin/nvim]
+   312,000 ( 0.12%)  /work/neovim/src/nvim/memline.c:xmemdupz
+   308,258 ( 0.12%)  ./string/../sysdeps/aarch64/multiarch/../memcpy.S:__GI_memmove [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   296,864 ( 0.11%)  /work/neovim/src/nvim/marktree.c:unrelative [/work/neovim/build/bin/nvim]
+   288,033 ( 0.11%)  /work/neovim/src/nvim/marktree.c:marktree_splice [/work/neovim/build/bin/nvim]
+   287,972 ( 0.11%)  ./string/../sysdeps/aarch64/strcpy.S:strcpy [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   287,931 ( 0.11%)  /work/neovim/src/nvim/marktree.c:marktree_itr_current [/work/neovim/build/bin/nvim]
+   282,033 ( 0.11%)  /work/neovim/src/nvim/memory.c:xmalloc [/work/neovim/build/bin/nvim]
+   280,035 ( 0.11%)  /work/neovim/src/nvim/buffer_updates.c:buf_updates_send_splice [/work/neovim/build/bin/nvim]
+   272,034 ( 0.10%)  /work/neovim/src/nvim/undo.c:u_get_headentry [/work/neovim/build/bin/nvim]
+   271,932 ( 0.10%)  /work/neovim/src/nvim/option.c:magic_isset'2 [/work/neovim/build/bin/nvim]
+   260,064 ( 0.10%)  /work/neovim/src/nvim/map.c:hash_HlEntry'2 [/work/neovim/build/bin/nvim]
+   256,092 ( 0.10%)  /work/neovim/src/nvim/regexp.c:utf_char2bytes'2
+   256,061 ( 0.10%)  /work/neovim/src/nvim/memline.c:ml_replace_buf_len [/work/neovim/build/bin/nvim]
+   250,087 ( 0.10%)  /work/neovim/src/nvim/regexp.c:utf_ptr2len
+   242,358 ( 0.09%)  /work/neovim/src/nvim/regexp.c:utfc_ptr2len'2
+   239,114 ( 0.09%)  /work/neovim/.deps/build/src/luajit/src/lj_gc.c:gc_mark [/work/neovim/build/bin/nvim]
+   236,865 ( 0.09%)  /work/neovim/src/nvim/charset.c:skiptowhite'2 [/work/neovim/build/bin/nvim]
+   232,000 ( 0.09%)  /work/neovim/src/nvim/regexp.c:find_match_text [/work/neovim/build/bin/nvim]
+   226,525 ( 0.09%)  ./malloc/./malloc/malloc.c:unlink_chunk.isra.0 [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   224,044 ( 0.09%)  /work/neovim/src/nvim/memline.c:ml_find_line_or_offset [/work/neovim/build/bin/nvim]
+   221,380 ( 0.08%)  /work/neovim/src/nvim/memfile.c:mf_put'2 [/work/neovim/build/bin/nvim]
+   219,013 ( 0.08%)  /work/neovim/.deps/build/src/luajit/src/lj_api.c:lua_settop [/work/neovim/build/bin/nvim]
+   217,434 ( 0.08%)  /work/neovim/.deps/build/src/luajit/src/lj_str.c:hash_sparse [/work/neovim/build/bin/nvim]
+   216,254 ( 0.08%)  /work/neovim/src/nvim/regexp.c:utf_ptr2char
+   215,946 ( 0.08%)  /work/neovim/src/nvim/ex_cmds.c:extmark_splice'2
+   215,946 ( 0.08%)  /work/neovim/src/nvim/memline.c:ml_append_int [/work/neovim/build/bin/nvim]
+   213,920 ( 0.08%)  /work/neovim/.deps/build/src/luajit/src/lj_api.c:lua_type [/work/neovim/build/bin/nvim]
+   213,030 ( 0.08%)  /work/neovim/src/nvim/memory.c:arena_alloc [/work/neovim/build/bin/nvim]
+   208,187 ( 0.08%)  /work/neovim/src/nvim/undo.c:bufIsChanged [/work/neovim/build/bin/nvim]
+   200,239 ( 0.08%)  /work/neovim/src/nvim/extmark.c:extmark_splice_impl'2 [/work/neovim/build/bin/nvim]
+   200,075 ( 0.08%)  /work/neovim/src/nvim/undo.c:undo_allowed [/work/neovim/build/bin/nvim]
+   198,027 ( 0.08%)  /work/neovim/src/nvim/memfile.c:map_put_int64_t_ptr_t
+   192,817 ( 0.07%)  /work/neovim/src/nvim/highlight_group.c:vim_isprintc'2
+   192,199 ( 0.07%)  /work/neovim/src/nvim/memory.c:xcalloc'2 [/work/neovim/build/bin/nvim]
+   192,168 ( 0.07%)  /work/neovim/src/nvim/buffer.c:bt_dontwrite [/work/neovim/build/bin/nvim]
+   192,000 ( 0.07%)  /work/neovim/src/nvim/regexp.c:find_match_text'2 [/work/neovim/build/bin/nvim]
+   191,888 ( 0.07%)  /work/neovim/src/nvim/api/buffer.c:ml_append_buf'2
+   189,498 ( 0.07%)  ./malloc/./malloc/malloc.c:_int_free_merge_chunk [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   187,237 ( 0.07%)  /work/neovim/src/nvim/memline.c:mf_put
+   187,113 ( 0.07%)  /work/neovim/.deps/build/src/luajit/src/lj_gc.c:gc_sweepstr [/work/neovim/build/bin/nvim]
+   186,557 ( 0.07%)  /work/neovim/src/nvim/memory.c:malloc
+   185,808 ( 0.07%)  /work/neovim/src/nvim/memory.c:xrealloc'2 [/work/neovim/build/bin/nvim]
+   184,338 ( 0.07%)  ???:lj_tab_newkey'2
+   184,062 ( 0.07%)  /work/neovim/src/nvim/undo.c:get_undolevel [/work/neovim/build/bin/nvim]
+   184,058 ( 0.07%)  /work/neovim/src/nvim/undo.c:u_getbot [/work/neovim/build/bin/nvim]
+   184,023 ( 0.07%)  /work/neovim/src/nvim/extmark.c:ml_find_line_or_offset
+   184,000 ( 0.07%)  /work/neovim/src/nvim/regexp.c:skip_to_start'2 [/work/neovim/build/bin/nvim]
+   182,799 ( 0.07%)  ./string/../sysdeps/aarch64/nptl/../memset.S:calloc
+   182,568 ( 0.07%)  /work/neovim/src/nvim/memory.c:arena_allocz [/work/neovim/build/bin/nvim]
+   182,364 ( 0.07%)  /work/neovim/src/nvim/cursor_shape.c:cursor_mode_uses_syn_id'2 [/work/neovim/build/bin/nvim]
+   180,601 ( 0.07%)  ./string/../sysdeps/aarch64/multiarch/../strlen.S:__GI_strlen [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   180,387 ( 0.07%)  /work/neovim/src/nvim/map_key_impl.c.h:mh_find_bucket_uint64_t [/work/neovim/build/bin/nvim]
+   176,040 ( 0.07%)  /work/neovim/src/nvim/undo.c:xmalloc
+   176,000 ( 0.07%)  /work/neovim/src/nvim/regexp.c:prog_magic_wrong'2 [/work/neovim/build/bin/nvim]
+   175,555 ( 0.07%)  ./string/../sysdeps/aarch64/strcmp.S:strcmp [/usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1]
+   175,042 ( 0.07%)  /work/neovim/src/nvim/memline.c:ml_get_buf_len [/work/neovim/build/bin/nvim]
+   172,894 ( 0.07%)  ./malloc/./malloc/malloc.c:realloc [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   170,587 ( 0.07%)  /work/neovim/src/nvim/mbyte.c:mb_toupper'2 [/work/neovim/build/bin/nvim]
+   168,843 ( 0.06%)  /work/neovim/src/nvim/memory.c:arena_alloc'2 [/work/neovim/build/bin/nvim]
+   168,133 ( 0.06%)  /work/neovim/src/nvim/mbyte.c:utf_char2len [/work/neovim/build/bin/nvim]
+   162,246 ( 0.06%)  ./malloc/./malloc/malloc.c:alloc_perturb [/usr/lib/aarch64-linux-gnu/libc.so.6]
+   161,928 ( 0.06%)  ./string/./string/strncpy.c:strncpy [/usr/lib/aarch64-linux-gnu/libc.so.6]

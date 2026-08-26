@@ -1,0 +1,433 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - nvim_unittest.info - nvim/api/private/converter.c</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory nvim/api/private">nvim/api/private</a> - converter.c<span style="font-size: 80%;"> (source / <a href="converter.c.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">nvim_unittest.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">112</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-08-26 13:15:22</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryLo">0.0&nbsp;%</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntry">0</td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : #include &lt;assert.h&gt;</span>
+<span id="L2"><span class="lineNum">       2</span>              : #include &lt;lauxlib.h&gt;</span>
+<span id="L3"><span class="lineNum">       3</span>              : #include &lt;stdbool.h&gt;</span>
+<span id="L4"><span class="lineNum">       4</span>              : #include &lt;stddef.h&gt;</span>
+<span id="L5"><span class="lineNum">       5</span>              : #include &lt;stdint.h&gt;</span>
+<span id="L6"><span class="lineNum">       6</span>              : </span>
+<span id="L7"><span class="lineNum">       7</span>              : #include &quot;klib/kvec.h&quot;</span>
+<span id="L8"><span class="lineNum">       8</span>              : #include &quot;nvim/api/private/converter.h&quot;</span>
+<span id="L9"><span class="lineNum">       9</span>              : #include &quot;nvim/api/private/defs.h&quot;</span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;nvim/api/private/helpers.h&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;nvim/assert_defs.h&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &quot;nvim/eval/decode.h&quot;</span>
+<span id="L13"><span class="lineNum">      13</span>              : #include &quot;nvim/eval/typval.h&quot;</span>
+<span id="L14"><span class="lineNum">      14</span>              : #include &quot;nvim/eval/typval_defs.h&quot;</span>
+<span id="L15"><span class="lineNum">      15</span>              : #include &quot;nvim/eval/userfunc.h&quot;</span>
+<span id="L16"><span class="lineNum">      16</span>              : #include &quot;nvim/lua/executor.h&quot;</span>
+<span id="L17"><span class="lineNum">      17</span>              : #include &quot;nvim/memory.h&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>              : #include &quot;nvim/memory_defs.h&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>              : #include &quot;nvim/types_defs.h&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>              : #include &quot;nvim/vim_defs.h&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>              : </span>
+<span id="L22"><span class="lineNum">      22</span>              : /// Helper structure for vim_to_object</span>
+<span id="L23"><span class="lineNum">      23</span>              : typedef struct {</span>
+<span id="L24"><span class="lineNum">      24</span>              :   kvec_withinit_t(Object, 2) stack;  ///&lt; Object stack.</span>
+<span id="L25"><span class="lineNum">      25</span>              :   Arena *arena;  ///&lt; arena where objects will be allocated</span>
+<span id="L26"><span class="lineNum">      26</span>              :   bool reuse_strdata;</span>
+<span id="L27"><span class="lineNum">      27</span>              : } EncodedData;</span>
+<span id="L28"><span class="lineNum">      28</span>              : </span>
+<span id="L29"><span class="lineNum">      29</span>              : #include &quot;api/private/converter.c.generated.h&quot;</span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span>              : #define TYPVAL_ENCODE_ALLOW_SPECIALS false</span>
+<span id="L32"><span class="lineNum">      32</span>              : #define TYPVAL_ENCODE_CHECK_BEFORE</span>
+<span id="L33"><span class="lineNum">      33</span>              : </span>
+<span id="L34"><span class="lineNum">      34</span>              : #define TYPVAL_ENCODE_CONV_NIL(tv) \</span>
+<span id="L35"><span class="lineNum">      35</span>              :   kvi_push(edata-&gt;stack, NIL)</span>
+<span id="L36"><span class="lineNum">      36</span>              : </span>
+<span id="L37"><span class="lineNum">      37</span>              : #define TYPVAL_ENCODE_CONV_BOOL(tv, num) \</span>
+<span id="L38"><span class="lineNum">      38</span>              :   kvi_push(edata-&gt;stack, BOOLEAN_OBJ((Boolean)(num)))</span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span>              : #define TYPVAL_ENCODE_CONV_NUMBER(tv, num) \</span>
+<span id="L41"><span class="lineNum">      41</span>              :   kvi_push(edata-&gt;stack, INTEGER_OBJ((Integer)(num)))</span>
+<span id="L42"><span class="lineNum">      42</span>              : </span>
+<span id="L43"><span class="lineNum">      43</span>              : #define TYPVAL_ENCODE_CONV_UNSIGNED_NUMBER TYPVAL_ENCODE_CONV_NUMBER</span>
+<span id="L44"><span class="lineNum">      44</span>              : </span>
+<span id="L45"><span class="lineNum">      45</span>              : #define TYPVAL_ENCODE_CONV_FLOAT(tv, flt) \</span>
+<span id="L46"><span class="lineNum">      46</span>              :   kvi_push(edata-&gt;stack, FLOAT_OBJ((Float)(flt)))</span>
+<span id="L47"><span class="lineNum">      47</span>              : </span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaUNC">           0 : static Object typval_cbuf_to_obj(EncodedData *edata, const char *data, size_t len)</span></span>
+<span id="L49"><span class="lineNum">      49</span>              : {</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaUNC">           0 :   if (edata-&gt;reuse_strdata) {</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaUNC">           0 :     return STRING_OBJ(cbuf_as_string((char *)(len ? data : &quot;&quot;), len));</span></span>
+<span id="L52"><span class="lineNum">      52</span>              :   } else {</span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaUNC">           0 :     return CBUF_TO_ARENA_OBJ(edata-&gt;arena, data, len);</span></span>
+<span id="L54"><span class="lineNum">      54</span>              :   }</span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L56"><span class="lineNum">      56</span>              : </span>
+<span id="L57"><span class="lineNum">      57</span>              : #define TYPVAL_ENCODE_CONV_STRING(tv, str, len) \</span>
+<span id="L58"><span class="lineNum">      58</span>              :   do { \</span>
+<span id="L59"><span class="lineNum">      59</span>              :     const size_t len_ = (size_t)(len); \</span>
+<span id="L60"><span class="lineNum">      60</span>              :     const char *const str_ = (str); \</span>
+<span id="L61"><span class="lineNum">      61</span>              :     assert(len_ == 0 || str_ != NULL); \</span>
+<span id="L62"><span class="lineNum">      62</span>              :     kvi_push(edata-&gt;stack, typval_cbuf_to_obj(edata, str_, len_)); \</span>
+<span id="L63"><span class="lineNum">      63</span>              :   } while (0)</span>
+<span id="L64"><span class="lineNum">      64</span>              : </span>
+<span id="L65"><span class="lineNum">      65</span>              : #define TYPVAL_ENCODE_CONV_STR_STRING TYPVAL_ENCODE_CONV_STRING</span>
+<span id="L66"><span class="lineNum">      66</span>              : </span>
+<span id="L67"><span class="lineNum">      67</span>              : #define TYPVAL_ENCODE_CONV_EXT_STRING(tv, str, len, type) \</span>
+<span id="L68"><span class="lineNum">      68</span>              :   TYPVAL_ENCODE_CONV_NIL(tv)</span>
+<span id="L69"><span class="lineNum">      69</span>              : </span>
+<span id="L70"><span class="lineNum">      70</span>              : #define TYPVAL_ENCODE_CONV_BLOB(tv, blob, len) \</span>
+<span id="L71"><span class="lineNum">      71</span>              :   do { \</span>
+<span id="L72"><span class="lineNum">      72</span>              :     const size_t len_ = (size_t)(len); \</span>
+<span id="L73"><span class="lineNum">      73</span>              :     const blob_T *const blob_ = (blob); \</span>
+<span id="L74"><span class="lineNum">      74</span>              :     kvi_push(edata-&gt;stack, typval_cbuf_to_obj(edata, len_ ? blob_-&gt;bv_ga.ga_data : &quot;&quot;, len_)); \</span>
+<span id="L75"><span class="lineNum">      75</span>              :   } while (0)</span>
+<span id="L76"><span class="lineNum">      76</span>              : </span>
+<span id="L77"><span class="lineNum">      77</span>              : #define TYPVAL_ENCODE_CONV_FUNC_START(tv, fun, prefix) \</span>
+<span id="L78"><span class="lineNum">      78</span>              :   do { \</span>
+<span id="L79"><span class="lineNum">      79</span>              :     const char *const fun_ = (fun); \</span>
+<span id="L80"><span class="lineNum">      80</span>              :     ufunc_T *fp; \</span>
+<span id="L81"><span class="lineNum">      81</span>              :     if (fun_ != NULL &amp;&amp; (fp = find_func(fun_)) != NULL &amp;&amp; fp-&gt;uf_flags &amp; FC_LUAREF) { \</span>
+<span id="L82"><span class="lineNum">      82</span>              :       kvi_push(edata-&gt;stack, LUAREF_OBJ(api_new_luaref(fp-&gt;uf_luaref))); \</span>
+<span id="L83"><span class="lineNum">      83</span>              :     } else { \</span>
+<span id="L84"><span class="lineNum">      84</span>              :       TYPVAL_ENCODE_CONV_NIL(tv); \</span>
+<span id="L85"><span class="lineNum">      85</span>              :     } \</span>
+<span id="L86"><span class="lineNum">      86</span>              :     goto typval_encode_stop_converting_one_item; \</span>
+<span id="L87"><span class="lineNum">      87</span>              :   } while (0)</span>
+<span id="L88"><span class="lineNum">      88</span>              : </span>
+<span id="L89"><span class="lineNum">      89</span>              : #define TYPVAL_ENCODE_CONV_FUNC_BEFORE_ARGS(tv, len)</span>
+<span id="L90"><span class="lineNum">      90</span>              : #define TYPVAL_ENCODE_CONV_FUNC_BEFORE_SELF(tv, len)</span>
+<span id="L91"><span class="lineNum">      91</span>              : #define TYPVAL_ENCODE_CONV_FUNC_END(tv)</span>
+<span id="L92"><span class="lineNum">      92</span>              : </span>
+<span id="L93"><span class="lineNum">      93</span>              : #define TYPVAL_ENCODE_CONV_EMPTY_LIST(tv) \</span>
+<span id="L94"><span class="lineNum">      94</span>              :   kvi_push(edata-&gt;stack, ARRAY_OBJ(((Array) { .capacity = 0, .size = 0 })))</span>
+<span id="L95"><span class="lineNum">      95</span>              : </span>
+<span id="L96"><span class="lineNum">      96</span>              : #define TYPVAL_ENCODE_CONV_EMPTY_DICT(tv, dict) \</span>
+<span id="L97"><span class="lineNum">      97</span>              :   kvi_push(edata-&gt;stack, DICT_OBJ(((Dict) { .capacity = 0, .size = 0 })))</span>
+<span id="L98"><span class="lineNum">      98</span>              : </span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaUNC">           0 : static inline void typval_encode_list_start(EncodedData *const edata, const size_t len)</span></span>
+<span id="L100"><span class="lineNum">     100</span>              :   FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</span>
+<span id="L101"><span class="lineNum">     101</span>              : {</span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaUNC">           0 :   kvi_push(edata-&gt;stack, ARRAY_OBJ(arena_array(edata-&gt;arena, len)));</span></span>
+<span id="L103"><span class="lineNum">     103</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L104"><span class="lineNum">     104</span>              : </span>
+<span id="L105"><span class="lineNum">     105</span>              : #define TYPVAL_ENCODE_CONV_LIST_START(tv, len) \</span>
+<span id="L106"><span class="lineNum">     106</span>              :   typval_encode_list_start(edata, (size_t)(len))</span>
+<span id="L107"><span class="lineNum">     107</span>              : </span>
+<span id="L108"><span class="lineNum">     108</span>              : #define TYPVAL_ENCODE_CONV_REAL_LIST_AFTER_START(tv, mpsv)</span>
+<span id="L109"><span class="lineNum">     109</span>              : </span>
+<span id="L110"><span class="lineNum">     110</span> <span class="tlaUNC">           0 : static inline void typval_encode_between_list_items(EncodedData *const edata)</span></span>
+<span id="L111"><span class="lineNum">     111</span>              :   FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</span>
+<span id="L112"><span class="lineNum">     112</span>              : {</span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaUNC">           0 :   Object item = kv_pop(edata-&gt;stack);</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaUNC">           0 :   Object *const list = &amp;kv_last(edata-&gt;stack);</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaUNC">           0 :   assert(list-&gt;type == kObjectTypeArray);</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaUNC">           0 :   assert(list-&gt;data.array.size &lt; list-&gt;data.array.capacity);</span></span>
+<span id="L117"><span class="lineNum">     117</span> <span class="tlaUNC">           0 :   ADD_C(list-&gt;data.array, item);</span></span>
+<span id="L118"><span class="lineNum">     118</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L119"><span class="lineNum">     119</span>              : </span>
+<span id="L120"><span class="lineNum">     120</span>              : #define TYPVAL_ENCODE_CONV_LIST_BETWEEN_ITEMS(tv) \</span>
+<span id="L121"><span class="lineNum">     121</span>              :   typval_encode_between_list_items(edata)</span>
+<span id="L122"><span class="lineNum">     122</span>              : </span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaUNC">           0 : static inline void typval_encode_list_end(EncodedData *const edata)</span></span>
+<span id="L124"><span class="lineNum">     124</span>              :   FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</span>
+<span id="L125"><span class="lineNum">     125</span>              : {</span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaUNC">           0 :   typval_encode_between_list_items(edata);</span></span>
+<span id="L127"><span class="lineNum">     127</span>              : #ifndef NDEBUG</span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaUNC">           0 :   const Object *const list = &amp;kv_last(edata-&gt;stack);</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaUNC">           0 :   assert(list-&gt;data.array.size == list-&gt;data.array.capacity);</span></span>
+<span id="L130"><span class="lineNum">     130</span>              : #endif</span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L132"><span class="lineNum">     132</span>              : </span>
+<span id="L133"><span class="lineNum">     133</span>              : #define TYPVAL_ENCODE_CONV_LIST_END(tv) \</span>
+<span id="L134"><span class="lineNum">     134</span>              :   typval_encode_list_end(edata)</span>
+<span id="L135"><span class="lineNum">     135</span>              : </span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaUNC">           0 : static inline void typval_encode_dict_start(EncodedData *const edata, const size_t len)</span></span>
+<span id="L137"><span class="lineNum">     137</span>              :   FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</span>
+<span id="L138"><span class="lineNum">     138</span>              : {</span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaUNC">           0 :   kvi_push(edata-&gt;stack, DICT_OBJ(arena_dict(edata-&gt;arena, len)));</span></span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L141"><span class="lineNum">     141</span>              : </span>
+<span id="L142"><span class="lineNum">     142</span>              : #define TYPVAL_ENCODE_CONV_DICT_START(tv, dict, len) \</span>
+<span id="L143"><span class="lineNum">     143</span>              :   typval_encode_dict_start(edata, (size_t)(len))</span>
+<span id="L144"><span class="lineNum">     144</span>              : </span>
+<span id="L145"><span class="lineNum">     145</span>              : #define TYPVAL_ENCODE_CONV_REAL_DICT_AFTER_START(tv, dict, mpsv)</span>
+<span id="L146"><span class="lineNum">     146</span>              : </span>
+<span id="L147"><span class="lineNum">     147</span>              : #define TYPVAL_ENCODE_SPECIAL_DICT_KEY_CHECK(label, kv_pair)</span>
+<span id="L148"><span class="lineNum">     148</span>              : </span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaUNC">           0 : static inline void typval_encode_after_key(EncodedData *const edata)</span></span>
+<span id="L150"><span class="lineNum">     150</span>              :   FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</span>
+<span id="L151"><span class="lineNum">     151</span>              : {</span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaUNC">           0 :   Object key = kv_pop(edata-&gt;stack);</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaUNC">           0 :   Object *const dict = &amp;kv_last(edata-&gt;stack);</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaUNC">           0 :   assert(dict-&gt;type == kObjectTypeDict);</span></span>
+<span id="L155"><span class="lineNum">     155</span> <span class="tlaUNC">           0 :   assert(dict-&gt;data.dict.size &lt; dict-&gt;data.dict.capacity);</span></span>
+<span id="L156"><span class="lineNum">     156</span> <span class="tlaUNC">           0 :   if (key.type == kObjectTypeString) {</span></span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaUNC">           0 :     dict-&gt;data.dict.items[dict-&gt;data.dict.size].key</span></span>
+<span id="L158"><span class="lineNum">     158</span> <span class="tlaUNC">           0 :       = key.data.string;</span></span>
+<span id="L159"><span class="lineNum">     159</span> <span class="tlaUNC">           0 :   } else {</span></span>
+<span id="L160"><span class="lineNum">     160</span> <span class="tlaUNC">           0 :     dict-&gt;data.dict.items[dict-&gt;data.dict.size].key</span></span>
+<span id="L161"><span class="lineNum">     161</span> <span class="tlaUNC">           0 :       = STATIC_CSTR_AS_STRING(&quot;__INVALID_KEY__&quot;);</span></span>
+<span id="L162"><span class="lineNum">     162</span>              :   }</span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L164"><span class="lineNum">     164</span>              : </span>
+<span id="L165"><span class="lineNum">     165</span>              : #define TYPVAL_ENCODE_CONV_DICT_AFTER_KEY(tv, dict) \</span>
+<span id="L166"><span class="lineNum">     166</span>              :   typval_encode_after_key(edata)</span>
+<span id="L167"><span class="lineNum">     167</span>              : </span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaUNC">           0 : static inline void typval_encode_between_dict_items(EncodedData *const edata)</span></span>
+<span id="L169"><span class="lineNum">     169</span>              :   FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</span>
+<span id="L170"><span class="lineNum">     170</span>              : {</span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaUNC">           0 :   Object val = kv_pop(edata-&gt;stack);</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaUNC">           0 :   Object *const dict = &amp;kv_last(edata-&gt;stack);</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaUNC">           0 :   assert(dict-&gt;type == kObjectTypeDict);</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaUNC">           0 :   assert(dict-&gt;data.dict.size &lt; dict-&gt;data.dict.capacity);</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaUNC">           0 :   dict-&gt;data.dict.items[dict-&gt;data.dict.size++].value = val;</span></span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L177"><span class="lineNum">     177</span>              : </span>
+<span id="L178"><span class="lineNum">     178</span>              : #define TYPVAL_ENCODE_CONV_DICT_BETWEEN_ITEMS(tv, dict) \</span>
+<span id="L179"><span class="lineNum">     179</span>              :   typval_encode_between_dict_items(edata)</span>
+<span id="L180"><span class="lineNum">     180</span>              : </span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaUNC">           0 : static inline void typval_encode_dict_end(EncodedData *const edata)</span></span>
+<span id="L182"><span class="lineNum">     182</span>              :   FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</span>
+<span id="L183"><span class="lineNum">     183</span>              : {</span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaUNC">           0 :   typval_encode_between_dict_items(edata);</span></span>
+<span id="L185"><span class="lineNum">     185</span>              : #ifndef NDEBUG</span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaUNC">           0 :   const Object *const dict = &amp;kv_last(edata-&gt;stack);</span></span>
+<span id="L187"><span class="lineNum">     187</span> <span class="tlaUNC">           0 :   assert(dict-&gt;data.dict.size == dict-&gt;data.dict.capacity);</span></span>
+<span id="L188"><span class="lineNum">     188</span>              : #endif</span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L190"><span class="lineNum">     190</span>              : </span>
+<span id="L191"><span class="lineNum">     191</span>              : #define TYPVAL_ENCODE_CONV_DICT_END(tv, dict) \</span>
+<span id="L192"><span class="lineNum">     192</span>              :   typval_encode_dict_end(edata)</span>
+<span id="L193"><span class="lineNum">     193</span>              : </span>
+<span id="L194"><span class="lineNum">     194</span>              : #define TYPVAL_ENCODE_CONV_RECURSE(val, conv_type) \</span>
+<span id="L195"><span class="lineNum">     195</span>              :   TYPVAL_ENCODE_CONV_NIL(val)</span>
+<span id="L196"><span class="lineNum">     196</span>              : </span>
+<span id="L197"><span class="lineNum">     197</span>              : #define TYPVAL_ENCODE_SCOPE static</span>
+<span id="L198"><span class="lineNum">     198</span>              : #define TYPVAL_ENCODE_NAME object</span>
+<span id="L199"><span class="lineNum">     199</span>              : #define TYPVAL_ENCODE_FIRST_ARG_TYPE EncodedData *const</span>
+<span id="L200"><span class="lineNum">     200</span>              : #define TYPVAL_ENCODE_FIRST_ARG_NAME edata</span>
+<span id="L201"><span class="lineNum">     201</span>              : #include &quot;nvim/eval/typval_encode.c.h&quot;</span>
+<span id="L202"><span class="lineNum">     202</span>              : </span>
+<span id="L203"><span class="lineNum">     203</span>              : #undef TYPVAL_ENCODE_SCOPE</span>
+<span id="L204"><span class="lineNum">     204</span>              : #undef TYPVAL_ENCODE_NAME</span>
+<span id="L205"><span class="lineNum">     205</span>              : #undef TYPVAL_ENCODE_FIRST_ARG_TYPE</span>
+<span id="L206"><span class="lineNum">     206</span>              : #undef TYPVAL_ENCODE_FIRST_ARG_NAME</span>
+<span id="L207"><span class="lineNum">     207</span>              : </span>
+<span id="L208"><span class="lineNum">     208</span>              : #undef TYPVAL_ENCODE_CONV_STRING</span>
+<span id="L209"><span class="lineNum">     209</span>              : #undef TYPVAL_ENCODE_CONV_STR_STRING</span>
+<span id="L210"><span class="lineNum">     210</span>              : #undef TYPVAL_ENCODE_CONV_EXT_STRING</span>
+<span id="L211"><span class="lineNum">     211</span>              : #undef TYPVAL_ENCODE_CONV_BLOB</span>
+<span id="L212"><span class="lineNum">     212</span>              : #undef TYPVAL_ENCODE_CONV_NUMBER</span>
+<span id="L213"><span class="lineNum">     213</span>              : #undef TYPVAL_ENCODE_CONV_FLOAT</span>
+<span id="L214"><span class="lineNum">     214</span>              : #undef TYPVAL_ENCODE_CONV_FUNC_START</span>
+<span id="L215"><span class="lineNum">     215</span>              : #undef TYPVAL_ENCODE_CONV_FUNC_BEFORE_ARGS</span>
+<span id="L216"><span class="lineNum">     216</span>              : #undef TYPVAL_ENCODE_CONV_FUNC_BEFORE_SELF</span>
+<span id="L217"><span class="lineNum">     217</span>              : #undef TYPVAL_ENCODE_CONV_FUNC_END</span>
+<span id="L218"><span class="lineNum">     218</span>              : #undef TYPVAL_ENCODE_CONV_EMPTY_LIST</span>
+<span id="L219"><span class="lineNum">     219</span>              : #undef TYPVAL_ENCODE_CONV_LIST_START</span>
+<span id="L220"><span class="lineNum">     220</span>              : #undef TYPVAL_ENCODE_CONV_REAL_LIST_AFTER_START</span>
+<span id="L221"><span class="lineNum">     221</span>              : #undef TYPVAL_ENCODE_CONV_EMPTY_DICT</span>
+<span id="L222"><span class="lineNum">     222</span>              : #undef TYPVAL_ENCODE_CHECK_BEFORE</span>
+<span id="L223"><span class="lineNum">     223</span>              : #undef TYPVAL_ENCODE_CONV_NIL</span>
+<span id="L224"><span class="lineNum">     224</span>              : #undef TYPVAL_ENCODE_CONV_BOOL</span>
+<span id="L225"><span class="lineNum">     225</span>              : #undef TYPVAL_ENCODE_CONV_UNSIGNED_NUMBER</span>
+<span id="L226"><span class="lineNum">     226</span>              : #undef TYPVAL_ENCODE_CONV_DICT_START</span>
+<span id="L227"><span class="lineNum">     227</span>              : #undef TYPVAL_ENCODE_CONV_REAL_DICT_AFTER_START</span>
+<span id="L228"><span class="lineNum">     228</span>              : #undef TYPVAL_ENCODE_CONV_DICT_END</span>
+<span id="L229"><span class="lineNum">     229</span>              : #undef TYPVAL_ENCODE_CONV_DICT_AFTER_KEY</span>
+<span id="L230"><span class="lineNum">     230</span>              : #undef TYPVAL_ENCODE_CONV_DICT_BETWEEN_ITEMS</span>
+<span id="L231"><span class="lineNum">     231</span>              : #undef TYPVAL_ENCODE_SPECIAL_DICT_KEY_CHECK</span>
+<span id="L232"><span class="lineNum">     232</span>              : #undef TYPVAL_ENCODE_CONV_LIST_END</span>
+<span id="L233"><span class="lineNum">     233</span>              : #undef TYPVAL_ENCODE_CONV_LIST_BETWEEN_ITEMS</span>
+<span id="L234"><span class="lineNum">     234</span>              : #undef TYPVAL_ENCODE_CONV_RECURSE</span>
+<span id="L235"><span class="lineNum">     235</span>              : #undef TYPVAL_ENCODE_ALLOW_SPECIALS</span>
+<span id="L236"><span class="lineNum">     236</span>              : </span>
+<span id="L237"><span class="lineNum">     237</span>              : /// Convert a vim object to an `Object` instance, recursively converting</span>
+<span id="L238"><span class="lineNum">     238</span>              : /// Arrays/Dictionaries.</span>
+<span id="L239"><span class="lineNum">     239</span>              : ///</span>
+<span id="L240"><span class="lineNum">     240</span>              : /// @param obj The source object</span>
+<span id="L241"><span class="lineNum">     241</span>              : /// @param arena if NULL, use direct allocation</span>
+<span id="L242"><span class="lineNum">     242</span>              : /// @param reuse_strdata when true, don't copy string data to Arena but reference</span>
+<span id="L243"><span class="lineNum">     243</span>              : ///                      typval strings directly. takes no effect when arena is</span>
+<span id="L244"><span class="lineNum">     244</span>              : ///                      NULL</span>
+<span id="L245"><span class="lineNum">     245</span>              : /// @return The converted value</span>
+<span id="L246"><span class="lineNum">     246</span> <span class="tlaUNC">           0 : Object vim_to_object(typval_T *obj, Arena *arena, bool reuse_strdata)</span></span>
+<span id="L247"><span class="lineNum">     247</span>              : {</span>
+<span id="L248"><span class="lineNum">     248</span>              :   EncodedData edata;</span>
+<span id="L249"><span class="lineNum">     249</span> <span class="tlaUNC">           0 :   kvi_init(edata.stack);</span></span>
+<span id="L250"><span class="lineNum">     250</span> <span class="tlaUNC">           0 :   edata.arena = arena;</span></span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaUNC">           0 :   edata.reuse_strdata = reuse_strdata;</span></span>
+<span id="L252"><span class="lineNum">     252</span> <span class="tlaUNC">           0 :   const int evo_ret = encode_vim_to_object(&amp;edata, obj, &quot;vim_to_object argument&quot;);</span></span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaUNC">           0 :   (void)evo_ret;</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaUNC">           0 :   assert(evo_ret == OK);</span></span>
+<span id="L255"><span class="lineNum">     255</span> <span class="tlaUNC">           0 :   Object ret = kv_A(edata.stack, 0);</span></span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaUNC">           0 :   assert(kv_size(edata.stack) == 1);</span></span>
+<span id="L257"><span class="lineNum">     257</span> <span class="tlaUNC">           0 :   kvi_destroy(edata.stack);</span></span>
+<span id="L258"><span class="lineNum">     258</span> <span class="tlaUNC">           0 :   return ret;</span></span>
+<span id="L259"><span class="lineNum">     259</span>              : }</span>
+<span id="L260"><span class="lineNum">     260</span>              : </span>
+<span id="L261"><span class="lineNum">     261</span>              : /// Converts from type Object to a Vimscript value.</span>
+<span id="L262"><span class="lineNum">     262</span>              : ///</span>
+<span id="L263"><span class="lineNum">     263</span>              : /// @param obj  Object to convert from.</span>
+<span id="L264"><span class="lineNum">     264</span>              : /// @param tv   Conversion result is placed here. On failure member v_type is</span>
+<span id="L265"><span class="lineNum">     265</span>              : ///             set to VAR_UNKNOWN (no allocation was made for this variable).</span>
+<span id="L266"><span class="lineNum">     266</span>              : /// @param err  Error object.</span>
+<span id="L267"><span class="lineNum">     267</span> <span class="tlaUNC">           0 : void object_to_vim(Object obj, typval_T *tv, Error *err)</span></span>
+<span id="L268"><span class="lineNum">     268</span>              : {</span>
+<span id="L269"><span class="lineNum">     269</span> <span class="tlaUNC">           0 :   object_to_vim_take_luaref(&amp;obj, tv, false, err);</span></span>
+<span id="L270"><span class="lineNum">     270</span> <span class="tlaUNC">           0 : }</span></span>
+<span id="L271"><span class="lineNum">     271</span>              : </span>
+<span id="L272"><span class="lineNum">     272</span>              : /// same as object_to_vim but consumes all luarefs (nested) in `obj`</span>
+<span id="L273"><span class="lineNum">     273</span>              : ///</span>
+<span id="L274"><span class="lineNum">     274</span>              : /// useful when `obj` is allocated on an arena</span>
+<span id="L275"><span class="lineNum">     275</span> <span class="tlaUNC">           0 : void object_to_vim_take_luaref(Object *obj, typval_T *tv, bool take_luaref, Error *err)</span></span>
+<span id="L276"><span class="lineNum">     276</span>              : {</span>
+<span id="L277"><span class="lineNum">     277</span> <span class="tlaUNC">           0 :   tv-&gt;v_type = VAR_UNKNOWN;</span></span>
+<span id="L278"><span class="lineNum">     278</span> <span class="tlaUNC">           0 :   tv-&gt;v_lock = VAR_UNLOCKED;</span></span>
+<span id="L279"><span class="lineNum">     279</span>              : </span>
+<span id="L280"><span class="lineNum">     280</span> <span class="tlaUNC">           0 :   switch (obj-&gt;type) {</span></span>
+<span id="L281"><span class="lineNum">     281</span>              :   case kObjectTypeNil:</span>
+<span id="L282"><span class="lineNum">     282</span> <span class="tlaUNC">           0 :     tv-&gt;v_type = VAR_SPECIAL;</span></span>
+<span id="L283"><span class="lineNum">     283</span> <span class="tlaUNC">           0 :     tv-&gt;vval.v_special = kSpecialVarNull;</span></span>
+<span id="L284"><span class="lineNum">     284</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L285"><span class="lineNum">     285</span>              : </span>
+<span id="L286"><span class="lineNum">     286</span>              :   case kObjectTypeBoolean:</span>
+<span id="L287"><span class="lineNum">     287</span> <span class="tlaUNC">           0 :     tv-&gt;v_type = VAR_BOOL;</span></span>
+<span id="L288"><span class="lineNum">     288</span> <span class="tlaUNC">           0 :     tv-&gt;vval.v_bool = obj-&gt;data.boolean ? kBoolVarTrue : kBoolVarFalse;</span></span>
+<span id="L289"><span class="lineNum">     289</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L290"><span class="lineNum">     290</span>              : </span>
+<span id="L291"><span class="lineNum">     291</span>              :   case kObjectTypeBuffer:</span>
+<span id="L292"><span class="lineNum">     292</span>              :   case kObjectTypeWindow:</span>
+<span id="L293"><span class="lineNum">     293</span>              :   case kObjectTypeTabpage:</span>
+<span id="L294"><span class="lineNum">     294</span>              :   case kObjectTypeInteger:</span>
+<span id="L295"><span class="lineNum">     295</span> <span class="tlaUNC">           0 :     STATIC_ASSERT(sizeof(obj-&gt;data.integer) &lt;= sizeof(varnumber_T),</span></span>
+<span id="L296"><span class="lineNum">     296</span>              :                   &quot;Integer size must be &lt;= Vimscript number size&quot;);</span>
+<span id="L297"><span class="lineNum">     297</span> <span class="tlaUNC">           0 :     tv-&gt;v_type = VAR_NUMBER;</span></span>
+<span id="L298"><span class="lineNum">     298</span> <span class="tlaUNC">           0 :     tv-&gt;vval.v_number = (varnumber_T)obj-&gt;data.integer;</span></span>
+<span id="L299"><span class="lineNum">     299</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L300"><span class="lineNum">     300</span>              : </span>
+<span id="L301"><span class="lineNum">     301</span>              :   case kObjectTypeFloat:</span>
+<span id="L302"><span class="lineNum">     302</span> <span class="tlaUNC">           0 :     tv-&gt;v_type = VAR_FLOAT;</span></span>
+<span id="L303"><span class="lineNum">     303</span> <span class="tlaUNC">           0 :     tv-&gt;vval.v_float = obj-&gt;data.floating;</span></span>
+<span id="L304"><span class="lineNum">     304</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L305"><span class="lineNum">     305</span>              : </span>
+<span id="L306"><span class="lineNum">     306</span>              :   case kObjectTypeString: {</span>
+<span id="L307"><span class="lineNum">     307</span> <span class="tlaUNC">           0 :     String s = obj-&gt;data.string;</span></span>
+<span id="L308"><span class="lineNum">     308</span> <span class="tlaUNC">           0 :     *tv = decode_string(s.data, s.size, false, false);</span></span>
+<span id="L309"><span class="lineNum">     309</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L310"><span class="lineNum">     310</span>              :   }</span>
+<span id="L311"><span class="lineNum">     311</span>              : </span>
+<span id="L312"><span class="lineNum">     312</span>              :   case kObjectTypeArray: {</span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaUNC">           0 :     list_T *const list = tv_list_alloc((ptrdiff_t)obj-&gt;data.array.size);</span></span>
+<span id="L314"><span class="lineNum">     314</span>              : </span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaUNC">           0 :     for (uint32_t i = 0; i &lt; obj-&gt;data.array.size; i++) {</span></span>
+<span id="L316"><span class="lineNum">     316</span>              :       typval_T li_tv;</span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaUNC">           0 :       object_to_vim_take_luaref(&amp;obj-&gt;data.array.items[i], &amp;li_tv, take_luaref, err);</span></span>
+<span id="L318"><span class="lineNum">     318</span> <span class="tlaUNC">           0 :       tv_list_append_owned_tv(list, li_tv);</span></span>
+<span id="L319"><span class="lineNum">     319</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L320"><span class="lineNum">     320</span> <span class="tlaUNC">           0 :     tv_list_ref(list);</span></span>
+<span id="L321"><span class="lineNum">     321</span>              : </span>
+<span id="L322"><span class="lineNum">     322</span> <span class="tlaUNC">           0 :     tv-&gt;v_type = VAR_LIST;</span></span>
+<span id="L323"><span class="lineNum">     323</span> <span class="tlaUNC">           0 :     tv-&gt;vval.v_list = list;</span></span>
+<span id="L324"><span class="lineNum">     324</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L325"><span class="lineNum">     325</span>              :   }</span>
+<span id="L326"><span class="lineNum">     326</span>              : </span>
+<span id="L327"><span class="lineNum">     327</span>              :   case kObjectTypeDict: {</span>
+<span id="L328"><span class="lineNum">     328</span> <span class="tlaUNC">           0 :     dict_T *const dict = tv_dict_alloc();</span></span>
+<span id="L329"><span class="lineNum">     329</span>              : </span>
+<span id="L330"><span class="lineNum">     330</span> <span class="tlaUNC">           0 :     for (uint32_t i = 0; i &lt; obj-&gt;data.dict.size; i++) {</span></span>
+<span id="L331"><span class="lineNum">     331</span> <span class="tlaUNC">           0 :       KeyValuePair *item = &amp;obj-&gt;data.dict.items[i];</span></span>
+<span id="L332"><span class="lineNum">     332</span> <span class="tlaUNC">           0 :       String key = item-&gt;key;</span></span>
+<span id="L333"><span class="lineNum">     333</span> <span class="tlaUNC">           0 :       dictitem_T *const di = tv_dict_item_alloc(key.data);</span></span>
+<span id="L334"><span class="lineNum">     334</span> <span class="tlaUNC">           0 :       object_to_vim_take_luaref(&amp;item-&gt;value, &amp;di-&gt;di_tv, take_luaref, err);</span></span>
+<span id="L335"><span class="lineNum">     335</span> <span class="tlaUNC">           0 :       tv_dict_add(dict, di);</span></span>
+<span id="L336"><span class="lineNum">     336</span> <span class="tlaUNC">           0 :     }</span></span>
+<span id="L337"><span class="lineNum">     337</span> <span class="tlaUNC">           0 :     dict-&gt;dv_refcount++;</span></span>
+<span id="L338"><span class="lineNum">     338</span>              : </span>
+<span id="L339"><span class="lineNum">     339</span> <span class="tlaUNC">           0 :     tv-&gt;v_type = VAR_DICT;</span></span>
+<span id="L340"><span class="lineNum">     340</span> <span class="tlaUNC">           0 :     tv-&gt;vval.v_dict = dict;</span></span>
+<span id="L341"><span class="lineNum">     341</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L342"><span class="lineNum">     342</span>              :   }</span>
+<span id="L343"><span class="lineNum">     343</span>              : </span>
+<span id="L344"><span class="lineNum">     344</span>              :   case kObjectTypeLuaRef: {</span>
+<span id="L345"><span class="lineNum">     345</span> <span class="tlaUNC">           0 :     LuaRef ref = obj-&gt;data.luaref;</span></span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaUNC">           0 :     if (take_luaref) {</span></span>
+<span id="L347"><span class="lineNum">     347</span> <span class="tlaUNC">           0 :       obj-&gt;data.luaref = LUA_NOREF;</span></span>
+<span id="L348"><span class="lineNum">     348</span> <span class="tlaUNC">           0 :     } else {</span></span>
+<span id="L349"><span class="lineNum">     349</span> <span class="tlaUNC">           0 :       ref = api_new_luaref(ref);</span></span>
+<span id="L350"><span class="lineNum">     350</span>              :     }</span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaUNC">           0 :     char *name = register_luafunc(ref);</span></span>
+<span id="L352"><span class="lineNum">     352</span> <span class="tlaUNC">           0 :     tv-&gt;v_type = VAR_FUNC;</span></span>
+<span id="L353"><span class="lineNum">     353</span> <span class="tlaUNC">           0 :     tv-&gt;vval.v_string = xstrdup(name);</span></span>
+<span id="L354"><span class="lineNum">     354</span> <span class="tlaUNC">           0 :     break;</span></span>
+<span id="L355"><span class="lineNum">     355</span>              :   }</span>
+<span id="L356"><span class="lineNum">     356</span>              :   }</span>
+<span id="L357"><span class="lineNum">     357</span> <span class="tlaUNC">           0 : }</span></span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

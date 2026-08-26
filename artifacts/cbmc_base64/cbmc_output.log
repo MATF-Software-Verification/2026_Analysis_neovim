@@ -1,0 +1,507 @@
+CBMC version 6.11.0 (cbmc-6.11.0) 64-bit arm64 macos
+Type-checking base64
+Type-checking harness_cbmc
+file ../2026_Analysis_neovim/artifacts/cbmc_base64/harness_cbmc.c line 32 function main: function 'nondet_char' is not declared
+Generating GOTO Program
+Adding CPROVER library (arm64)
+Removal of function pointers and virtual functions
+Generic Property Instrumentation
+Starting Bounded Model Checking
+Passing problem to propositional reduction
+converting SSA
+Running propositional reduction
+SAT checker: instance is UNSATISFIABLE
+
+** Results:
+../2026_Analysis_neovim/artifacts/cbmc_base64/harness_cbmc.c function main
+[main.overflow.1] line 31 arithmetic overflow on unsigned + in i + 1ul: SUCCESS
+[main.array_bounds.1] line 32 array 'src' upper bound in src[(signed long int)i]: SUCCESS
+
+../2026_Analysis_neovim/artifacts/cbmc_base64/harness_cbmc.c function xfree
+[xfree.precondition_instance.1] line 23 free argument must be NULL or valid pointer: SUCCESS
+[xfree.precondition_instance.2] line 23 free argument must be dynamic object: SUCCESS
+[xfree.precondition_instance.3] line 23 free argument has offset zero: SUCCESS
+[xfree.precondition_instance.4] line 23 double free: SUCCESS
+[xfree.precondition_instance.5] line 23 free called for new[] object: SUCCESS
+[xfree.precondition_instance.6] line 23 free called for stack-allocated object: SUCCESS
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_ctype.h function __isctype
+[__isctype.array_bounds.1] line 175 array '_DefaultRuneLocale'.__runetype lower bound in _DefaultRuneLocale.__runetype[(signed long int)_c]: SUCCESS
+[__isctype.array_bounds.2] line 175 array '_DefaultRuneLocale'.__runetype upper bound in _DefaultRuneLocale.__runetype[(signed long int)_c]: SUCCESS
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_ctype.h function __istype
+[__istype.array_bounds.1] line 163 array '_DefaultRuneLocale'.__runetype lower bound in _DefaultRuneLocale.__runetype[(signed long int)_c]: SUCCESS
+[__istype.array_bounds.2] line 163 array '_DefaultRuneLocale'.__runetype upper bound in _DefaultRuneLocale.__runetype[(signed long int)_c]: SUCCESS
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_stdio.h function __sputc
+[__sputc.overflow.1] line 366 arithmetic overflow on signed - in _p->_w - 1: SUCCESS
+[__sputc.pointer_dereference.1] line 366 dereference failure: pointer NULL in _p->_w: SUCCESS
+[__sputc.pointer_dereference.2] line 366 dereference failure: pointer invalid in _p->_w: SUCCESS
+[__sputc.pointer_dereference.3] line 366 dereference failure: deallocated dynamic object in _p->_w: SUCCESS
+[__sputc.pointer_dereference.4] line 366 dereference failure: dead object in _p->_w: SUCCESS
+[__sputc.pointer_dereference.5] line 366 dereference failure: pointer outside object bounds in _p->_w: SUCCESS
+[__sputc.pointer_dereference.6] line 366 dereference failure: invalid integer address in _p->_w: SUCCESS
+[__sputc.pointer_dereference.7] line 366 dereference failure: pointer NULL in _p->_w: SUCCESS
+[__sputc.pointer_dereference.8] line 366 dereference failure: pointer invalid in _p->_w: SUCCESS
+[__sputc.pointer_dereference.9] line 366 dereference failure: deallocated dynamic object in _p->_w: SUCCESS
+[__sputc.pointer_dereference.10] line 366 dereference failure: dead object in _p->_w: SUCCESS
+[__sputc.pointer_dereference.11] line 366 dereference failure: pointer outside object bounds in _p->_w: SUCCESS
+[__sputc.pointer_dereference.12] line 366 dereference failure: invalid integer address in _p->_w: SUCCESS
+[__sputc.pointer_dereference.13] line 366 dereference failure: pointer NULL in _p->_lbfsize: SUCCESS
+[__sputc.pointer_dereference.14] line 366 dereference failure: pointer invalid in _p->_lbfsize: SUCCESS
+[__sputc.pointer_dereference.15] line 366 dereference failure: deallocated dynamic object in _p->_lbfsize: SUCCESS
+[__sputc.pointer_dereference.16] line 366 dereference failure: dead object in _p->_lbfsize: SUCCESS
+[__sputc.pointer_dereference.17] line 366 dereference failure: pointer outside object bounds in _p->_lbfsize: SUCCESS
+[__sputc.pointer_dereference.18] line 366 dereference failure: invalid integer address in _p->_lbfsize: SUCCESS
+[__sputc.pointer_dereference.19] line 367 dereference failure: pointer NULL in _p->_p: SUCCESS
+[__sputc.pointer_dereference.20] line 367 dereference failure: pointer invalid in _p->_p: SUCCESS
+[__sputc.pointer_dereference.21] line 367 dereference failure: deallocated dynamic object in _p->_p: SUCCESS
+[__sputc.pointer_dereference.22] line 367 dereference failure: dead object in _p->_p: SUCCESS
+[__sputc.pointer_dereference.23] line 367 dereference failure: pointer outside object bounds in _p->_p: SUCCESS
+[__sputc.pointer_dereference.24] line 367 dereference failure: invalid integer address in _p->_p: SUCCESS
+[__sputc.pointer_dereference.25] line 367 dereference failure: pointer NULL in *tmp_post: SUCCESS
+[__sputc.pointer_dereference.26] line 367 dereference failure: pointer invalid in *tmp_post: SUCCESS
+[__sputc.pointer_dereference.27] line 367 dereference failure: deallocated dynamic object in *tmp_post: SUCCESS
+[__sputc.pointer_dereference.28] line 367 dereference failure: dead object in *tmp_post: SUCCESS
+[__sputc.pointer_dereference.29] line 367 dereference failure: pointer outside object bounds in *tmp_post: SUCCESS
+[__sputc.pointer_dereference.30] line 367 dereference failure: invalid integer address in *tmp_post: SUCCESS
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_fd_def.h function __darwin_fd_clr
+[__darwin_fd_clr.array_bounds.1] line 101 array.fds_bits dynamic object upper bound in _p->fds_bits[(signed long int)((unsigned long int)_fd / (sizeof(__int32_t) /*4ul*/  * (unsigned long int)8))]: SUCCESS
+[__darwin_fd_clr.pointer_dereference.1] line 101 dereference failure: pointer NULL in _p->fds_bits: SUCCESS
+[__darwin_fd_clr.pointer_dereference.2] line 101 dereference failure: pointer invalid in _p->fds_bits: SUCCESS
+[__darwin_fd_clr.pointer_dereference.3] line 101 dereference failure: deallocated dynamic object in _p->fds_bits: SUCCESS
+[__darwin_fd_clr.pointer_dereference.4] line 101 dereference failure: dead object in _p->fds_bits: SUCCESS
+[__darwin_fd_clr.pointer_dereference.5] line 101 dereference failure: pointer outside object bounds in _p->fds_bits: SUCCESS
+[__darwin_fd_clr.pointer_dereference.6] line 101 dereference failure: invalid integer address in _p->fds_bits: SUCCESS
+[__darwin_fd_clr.undefined-shift.1] line 101 shift distance too large in (unsigned long int)1 << (unsigned long int)_fd % (sizeof(__int32_t) /*4ul*/  * (unsigned long int)8): SUCCESS
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_fd_def.h function __darwin_fd_isset
+[__darwin_fd_isset.array_bounds.1] line 83 array.fds_bits dynamic object upper bound in _p->fds_bits[(signed long int)((unsigned long int)_fd / (sizeof(__int32_t) /*4ul*/  * (unsigned long int)8))]: SUCCESS
+[__darwin_fd_isset.pointer_dereference.1] line 83 dereference failure: pointer NULL in _p->fds_bits: SUCCESS
+[__darwin_fd_isset.pointer_dereference.2] line 83 dereference failure: pointer invalid in _p->fds_bits: SUCCESS
+[__darwin_fd_isset.pointer_dereference.3] line 83 dereference failure: deallocated dynamic object in _p->fds_bits: SUCCESS
+[__darwin_fd_isset.pointer_dereference.4] line 83 dereference failure: dead object in _p->fds_bits: SUCCESS
+[__darwin_fd_isset.pointer_dereference.5] line 83 dereference failure: pointer outside object bounds in _p->fds_bits: SUCCESS
+[__darwin_fd_isset.pointer_dereference.6] line 83 dereference failure: invalid integer address in _p->fds_bits: SUCCESS
+[__darwin_fd_isset.undefined-shift.1] line 83 shift distance too large in (unsigned long int)1 << (unsigned long int)_fd % (sizeof(__int32_t) /*4ul*/  * (unsigned long int)8): SUCCESS
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_fd_def.h function __darwin_fd_set
+[__darwin_fd_set.array_bounds.1] line 93 array.fds_bits dynamic object upper bound in _p->fds_bits[(signed long int)((unsigned long int)_fd / (sizeof(__int32_t) /*4ul*/  * (unsigned long int)8))]: SUCCESS
+[__darwin_fd_set.pointer_dereference.1] line 93 dereference failure: pointer NULL in _p->fds_bits: SUCCESS
+[__darwin_fd_set.pointer_dereference.2] line 93 dereference failure: pointer invalid in _p->fds_bits: SUCCESS
+[__darwin_fd_set.pointer_dereference.3] line 93 dereference failure: deallocated dynamic object in _p->fds_bits: SUCCESS
+[__darwin_fd_set.pointer_dereference.4] line 93 dereference failure: dead object in _p->fds_bits: SUCCESS
+[__darwin_fd_set.pointer_dereference.5] line 93 dereference failure: pointer outside object bounds in _p->fds_bits: SUCCESS
+[__darwin_fd_set.pointer_dereference.6] line 93 dereference failure: invalid integer address in _p->fds_bits: SUCCESS
+[__darwin_fd_set.undefined-shift.1] line 93 shift distance too large in (unsigned long int)1 << (unsigned long int)_fd % (sizeof(__int32_t) /*4ul*/  * (unsigned long int)8): SUCCESS
+
+<builtin-library-__builtin___memcpy_chk> function __builtin___memcpy_chk
+[__builtin___memcpy_chk.pointer.1] line 27 same object violation in (const unsigned char *)(const void *)&s[(signed long int)src_i] >= (const unsigned char *)(void *)&bits_h + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer.3] line 27 same object violation in (const unsigned char *)(const void *)&s[(signed long int)src_i] >= (const unsigned char *)(void *)&bits_h + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.1] line 27 pointer relation: pointer NULL in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.2] line 27 pointer relation: pointer invalid in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.3] line 27 pointer relation: deallocated dynamic object in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.4] line 27 pointer relation: dead object in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.5] line 27 pointer relation: pointer outside object bounds in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.6] line 27 pointer relation: invalid integer address in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.7] line 27 pointer relation: dead object in (const unsigned char *)(void *)&bits_h + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.15] line 27 pointer relation: pointer NULL in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.16] line 27 pointer relation: pointer invalid in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.17] line 27 pointer relation: deallocated dynamic object in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.18] line 27 pointer relation: dead object in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.19] line 27 pointer relation: pointer outside object bounds in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.20] line 27 pointer relation: invalid integer address in (const unsigned char *)(const void *)&s[(signed long int)src_i]: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.21] line 27 pointer relation: dead object in (const unsigned char *)(void *)&bits_h + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer.2] line 28 same object violation in (const unsigned char *)(void *)&bits_h >= (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer.4] line 28 same object violation in (const unsigned char *)(void *)&bits_h >= (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.8] line 28 pointer relation: dead object in (const unsigned char *)(void *)&bits_h: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.9] line 28 pointer relation: pointer NULL in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.10] line 28 pointer relation: pointer invalid in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.11] line 28 pointer relation: deallocated dynamic object in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.12] line 28 pointer relation: dead object in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.13] line 28 pointer relation: pointer outside object bounds in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.14] line 28 pointer relation: invalid integer address in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint64_t) /*8ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.22] line 28 pointer relation: dead object in (const unsigned char *)(void *)&bits_h: SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.23] line 28 pointer relation: pointer NULL in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.24] line 28 pointer relation: pointer invalid in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.25] line 28 pointer relation: deallocated dynamic object in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.26] line 28 pointer relation: dead object in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.27] line 28 pointer relation: pointer outside object bounds in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+[__builtin___memcpy_chk.pointer_arithmetic.28] line 28 pointer relation: invalid integer address in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
+
+<builtin-library-malloc> function malloc
+[malloc.assertion.1] line 31 max allocation size exceeded: SUCCESS
+[malloc.assertion.2] line 36 max allocation may fail: SUCCESS
+
+src/nvim/base64.c function base64_decode
+[base64_decode.assertion.1] line 147 assertion src != NULL: SUCCESS
+[base64_decode.assertion.2] line 148 assertion out_lenp != NULL: SUCCESS
+[base64_decode.overflow.1] line 156 arithmetic overflow on unsigned * in (src_len / (unsigned long int)4) * (unsigned long int)3: SUCCESS
+[base64_decode.overflow.2] line 157 arithmetic overflow on unsigned - in src_len - (unsigned long int)1: SUCCESS
+[base64_decode.pointer_dereference.1] line 157 dereference failure: pointer NULL in src[(signed long int)(src_len - (unsigned long int)1)]: SUCCESS
+[base64_decode.pointer_dereference.2] line 157 dereference failure: pointer invalid in src[(signed long int)(src_len - (unsigned long int)1)]: SUCCESS
+[base64_decode.pointer_dereference.3] line 157 dereference failure: deallocated dynamic object in src[(signed long int)(src_len - (unsigned long int)1)]: SUCCESS
+[base64_decode.pointer_dereference.4] line 157 dereference failure: dead object in src[(signed long int)(src_len - (unsigned long int)1)]: SUCCESS
+[base64_decode.pointer_dereference.5] line 157 dereference failure: pointer outside object bounds in src[(signed long int)(src_len - (unsigned long int)1)]: SUCCESS
+[base64_decode.pointer_dereference.6] line 157 dereference failure: invalid integer address in src[(signed long int)(src_len - (unsigned long int)1)]: SUCCESS
+[base64_decode.overflow.3] line 158 arithmetic overflow on unsigned - in out_len - 1ul: SUCCESS
+[base64_decode.overflow.4] line 160 arithmetic overflow on unsigned - in src_len - (unsigned long int)2: SUCCESS
+[base64_decode.pointer_dereference.7] line 160 dereference failure: pointer NULL in src[(signed long int)(src_len - (unsigned long int)2)]: SUCCESS
+[base64_decode.pointer_dereference.8] line 160 dereference failure: pointer invalid in src[(signed long int)(src_len - (unsigned long int)2)]: SUCCESS
+[base64_decode.pointer_dereference.9] line 160 dereference failure: deallocated dynamic object in src[(signed long int)(src_len - (unsigned long int)2)]: SUCCESS
+[base64_decode.pointer_dereference.10] line 160 dereference failure: dead object in src[(signed long int)(src_len - (unsigned long int)2)]: SUCCESS
+[base64_decode.pointer_dereference.11] line 160 dereference failure: pointer outside object bounds in src[(signed long int)(src_len - (unsigned long int)2)]: SUCCESS
+[base64_decode.pointer_dereference.12] line 160 dereference failure: invalid integer address in src[(signed long int)(src_len - (unsigned long int)2)]: SUCCESS
+[base64_decode.overflow.5] line 161 arithmetic overflow on unsigned - in out_len - 1ul: SUCCESS
+[base64_decode.overflow.12] line 174 arithmetic overflow on unsigned + in src_i + 1ul: SUCCESS
+[base64_decode.unwind.0] line 174 unwinding assertion loop 0: SUCCESS
+[base64_decode.pointer_dereference.13] line 175 dereference failure: pointer NULL in s[(signed long int)src_i]: SUCCESS
+[base64_decode.pointer_dereference.14] line 175 dereference failure: pointer invalid in s[(signed long int)src_i]: SUCCESS
+[base64_decode.pointer_dereference.15] line 175 dereference failure: deallocated dynamic object in s[(signed long int)src_i]: SUCCESS
+[base64_decode.pointer_dereference.16] line 175 dereference failure: dead object in s[(signed long int)src_i]: SUCCESS
+[base64_decode.pointer_dereference.17] line 175 dereference failure: pointer outside object bounds in s[(signed long int)src_i]: SUCCESS
+[base64_decode.pointer_dereference.18] line 175 dereference failure: invalid integer address in s[(signed long int)src_i]: SUCCESS
+[base64_decode.array_bounds.1] line 176 array 'char_to_index' upper bound in char_to_index[(signed long int)c]: SUCCESS
+[base64_decode.overflow.6] line 185 arithmetic overflow on signed shl in acc << 6: SUCCESS
+[base64_decode.overflow.7] line 185 arithmetic overflow on signed - in (signed int)d - 1: SUCCESS
+[base64_decode.overflow.8] line 185 arithmetic overflow on signed + in (acc << 6 & 0xFFF) + ((signed int)d - 1): SUCCESS
+[base64_decode.undefined-shift.1] line 185 shift operand is negative in acc << 6: SUCCESS
+[base64_decode.overflow.9] line 186 arithmetic overflow on signed + in acc_len + 6: SUCCESS
+[base64_decode.overflow.10] line 188 arithmetic overflow on signed - in acc_len - 8: SUCCESS
+[base64_decode.pointer_dereference.19] line 189 dereference failure: pointer NULL in dest[(signed long int)out_i]: SUCCESS
+[base64_decode.pointer_dereference.20] line 189 dereference failure: pointer invalid in dest[(signed long int)out_i]: SUCCESS
+[base64_decode.pointer_dereference.21] line 189 dereference failure: deallocated dynamic object in dest[(signed long int)out_i]: SUCCESS
+[base64_decode.pointer_dereference.22] line 189 dereference failure: dead object in dest[(signed long int)out_i]: SUCCESS
+[base64_decode.pointer_dereference.23] line 189 dereference failure: pointer outside object bounds in dest[(signed long int)out_i]: SUCCESS
+[base64_decode.pointer_dereference.24] line 189 dereference failure: invalid integer address in dest[(signed long int)out_i]: SUCCESS
+[base64_decode.undefined-shift.2] line 189 shift distance is negative in acc >> acc_len: SUCCESS
+[base64_decode.undefined-shift.3] line 189 shift distance too large in acc >> acc_len: SUCCESS
+[base64_decode.overflow.11] line 190 arithmetic overflow on unsigned + in out_i + (unsigned long int)1: SUCCESS
+[base64_decode.overflow.13] line 194 arithmetic overflow on signed shl in 1 << acc_len: SUCCESS
+[base64_decode.overflow.14] line 194 arithmetic overflow on signed - in (1 << acc_len) - 1: SUCCESS
+[base64_decode.undefined-shift.4] line 194 shift distance is negative in 1 << acc_len: SUCCESS
+[base64_decode.undefined-shift.5] line 194 shift distance too large in 1 << acc_len: SUCCESS
+[base64_decode.overflow.16] line 201 arithmetic overflow on signed + in leftover_i + 1: SUCCESS
+[base64_decode.unwind.1] line 201 unwinding assertion loop 1: SUCCESS
+[base64_decode.pointer_dereference.25] line 202 dereference failure: pointer NULL in s[(signed long int)leftover_i]: SUCCESS
+[base64_decode.pointer_dereference.26] line 202 dereference failure: pointer invalid in s[(signed long int)leftover_i]: SUCCESS
+[base64_decode.pointer_dereference.27] line 202 dereference failure: deallocated dynamic object in s[(signed long int)leftover_i]: SUCCESS
+[base64_decode.pointer_dereference.28] line 202 dereference failure: dead object in s[(signed long int)leftover_i]: SUCCESS
+[base64_decode.pointer_dereference.29] line 202 dereference failure: pointer outside object bounds in s[(signed long int)leftover_i]: SUCCESS
+[base64_decode.pointer_dereference.30] line 202 dereference failure: invalid integer address in s[(signed long int)leftover_i]: SUCCESS
+[base64_decode.overflow.15] line 206 arithmetic overflow on signed + in padding_chars + 1: SUCCESS
+[base64_decode.pointer_dereference.31] line 214 dereference failure: pointer NULL in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.32] line 214 dereference failure: pointer invalid in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.33] line 214 dereference failure: deallocated dynamic object in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.34] line 214 dereference failure: dead object in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.35] line 214 dereference failure: pointer outside object bounds in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.36] line 214 dereference failure: invalid integer address in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.37] line 223 dereference failure: pointer NULL in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.38] line 223 dereference failure: pointer invalid in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.39] line 223 dereference failure: deallocated dynamic object in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.40] line 223 dereference failure: dead object in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.41] line 223 dereference failure: pointer outside object bounds in *out_lenp: SUCCESS
+[base64_decode.pointer_dereference.42] line 223 dereference failure: invalid integer address in *out_lenp: SUCCESS
+
+src/nvim/base64.c function base64_encode
+[base64_encode.assertion.1] line 71 assertion src != NULL: SUCCESS
+[base64_encode.overflow.1] line 73 arithmetic overflow on unsigned + in src_len + (unsigned long int)2: SUCCESS
+[base64_encode.overflow.2] line 73 arithmetic overflow on unsigned * in ((src_len + (unsigned long int)2) / (unsigned long int)3) * (unsigned long int)4: SUCCESS
+[base64_encode.overflow.3] line 74 arithmetic overflow on unsigned + in out_len + (unsigned long int)1: SUCCESS
+[base64_encode.overflow.4] line 82 arithmetic overflow on unsigned + in src_i + (unsigned long int)7: SUCCESS
+[base64_encode.overflow.13] line 82 arithmetic overflow on unsigned + in src_i + (unsigned long int)6: SUCCESS
+[base64_encode.unwind.0] line 82 unwinding assertion loop 0: SUCCESS
+[base64_encode.precondition_instance.1] line 84 memcpy src/dst overlap: SUCCESS
+[base64_encode.precondition_instance.2] line 84 memcpy source region readable: SUCCESS
+[base64_encode.precondition_instance.3] line 84 memcpy destination region writeable: SUCCESS
+[base64_encode.array_bounds.1] line 86 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 58 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.pointer_dereference.1] line 86 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.2] line 86 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.3] line 86 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.4] line 86 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.5] line 86 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.6] line 86 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.array_bounds.2] line 87 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 52 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.overflow.5] line 87 arithmetic overflow on unsigned + in out_i + (unsigned long int)1: SUCCESS
+[base64_encode.pointer_dereference.7] line 87 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.8] line 87 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.9] line 87 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.10] line 87 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.11] line 87 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.12] line 87 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.array_bounds.3] line 88 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 46 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.overflow.6] line 88 arithmetic overflow on unsigned + in out_i + (unsigned long int)2: SUCCESS
+[base64_encode.pointer_dereference.13] line 88 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.14] line 88 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.15] line 88 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.16] line 88 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.17] line 88 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.18] line 88 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.array_bounds.4] line 89 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 40 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.overflow.7] line 89 arithmetic overflow on unsigned + in out_i + (unsigned long int)3: SUCCESS
+[base64_encode.pointer_dereference.19] line 89 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.20] line 89 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.21] line 89 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.22] line 89 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.23] line 89 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.24] line 89 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.array_bounds.5] line 90 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 34 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.overflow.8] line 90 arithmetic overflow on unsigned + in out_i + (unsigned long int)4: SUCCESS
+[base64_encode.pointer_dereference.25] line 90 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)4)]: SUCCESS
+[base64_encode.pointer_dereference.26] line 90 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)4)]: SUCCESS
+[base64_encode.pointer_dereference.27] line 90 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)4)]: SUCCESS
+[base64_encode.pointer_dereference.28] line 90 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)4)]: SUCCESS
+[base64_encode.pointer_dereference.29] line 90 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)4)]: SUCCESS
+[base64_encode.pointer_dereference.30] line 90 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)4)]: SUCCESS
+[base64_encode.array_bounds.6] line 91 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 28 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.overflow.9] line 91 arithmetic overflow on unsigned + in out_i + (unsigned long int)5: SUCCESS
+[base64_encode.pointer_dereference.31] line 91 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)5)]: SUCCESS
+[base64_encode.pointer_dereference.32] line 91 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)5)]: SUCCESS
+[base64_encode.pointer_dereference.33] line 91 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)5)]: SUCCESS
+[base64_encode.pointer_dereference.34] line 91 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)5)]: SUCCESS
+[base64_encode.pointer_dereference.35] line 91 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)5)]: SUCCESS
+[base64_encode.pointer_dereference.36] line 91 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)5)]: SUCCESS
+[base64_encode.array_bounds.7] line 92 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 22 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.overflow.10] line 92 arithmetic overflow on unsigned + in out_i + (unsigned long int)6: SUCCESS
+[base64_encode.pointer_dereference.37] line 92 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)6)]: SUCCESS
+[base64_encode.pointer_dereference.38] line 92 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)6)]: SUCCESS
+[base64_encode.pointer_dereference.39] line 92 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)6)]: SUCCESS
+[base64_encode.pointer_dereference.40] line 92 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)6)]: SUCCESS
+[base64_encode.pointer_dereference.41] line 92 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)6)]: SUCCESS
+[base64_encode.pointer_dereference.42] line 92 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)6)]: SUCCESS
+[base64_encode.array_bounds.8] line 93 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 16 & (unsigned long int)0x3F)]: SUCCESS
+[base64_encode.overflow.11] line 93 arithmetic overflow on unsigned + in out_i + (unsigned long int)7: SUCCESS
+[base64_encode.pointer_dereference.43] line 93 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)7)]: SUCCESS
+[base64_encode.pointer_dereference.44] line 93 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)7)]: SUCCESS
+[base64_encode.pointer_dereference.45] line 93 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)7)]: SUCCESS
+[base64_encode.pointer_dereference.46] line 93 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)7)]: SUCCESS
+[base64_encode.pointer_dereference.47] line 93 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)7)]: SUCCESS
+[base64_encode.pointer_dereference.48] line 93 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)7)]: SUCCESS
+[base64_encode.overflow.12] line 94 arithmetic overflow on unsigned + in out_i + sizeof(uint64_t) /*8ul*/ : SUCCESS
+[base64_encode.overflow.14] line 97 arithmetic overflow on unsigned + in src_i + (unsigned long int)3: SUCCESS
+[base64_encode.overflow.19] line 97 arithmetic overflow on unsigned + in src_i + (unsigned long int)3: SUCCESS
+[base64_encode.unwind.1] line 97 unwinding assertion loop 1: SUCCESS
+[base64_encode.precondition_instance.4] line 99 memcpy src/dst overlap: SUCCESS
+[base64_encode.precondition_instance.5] line 99 memcpy source region readable: SUCCESS
+[base64_encode.precondition_instance.6] line 99 memcpy destination region writeable: SUCCESS
+[base64_encode.array_bounds.9] line 101 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 26 & (unsigned int)0x3F)]: SUCCESS
+[base64_encode.pointer_dereference.49] line 101 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.50] line 101 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.51] line 101 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.52] line 101 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.53] line 101 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.54] line 101 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.array_bounds.10] line 102 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 20 & (unsigned int)0x3F)]: SUCCESS
+[base64_encode.overflow.15] line 102 arithmetic overflow on unsigned + in out_i + (unsigned long int)1: SUCCESS
+[base64_encode.pointer_dereference.55] line 102 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.56] line 102 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.57] line 102 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.58] line 102 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.59] line 102 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.60] line 102 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.array_bounds.11] line 103 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 14 & (unsigned int)0x3F)]: SUCCESS
+[base64_encode.overflow.16] line 103 arithmetic overflow on unsigned + in out_i + (unsigned long int)2: SUCCESS
+[base64_encode.pointer_dereference.61] line 103 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.62] line 103 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.63] line 103 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.64] line 103 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.65] line 103 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.66] line 103 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.array_bounds.12] line 104 array 'alphabet' upper bound in alphabet[(signed long int)(bits_be >> 8 & (unsigned int)0x3F)]: SUCCESS
+[base64_encode.overflow.17] line 104 arithmetic overflow on unsigned + in out_i + (unsigned long int)3: SUCCESS
+[base64_encode.pointer_dereference.67] line 104 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.68] line 104 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.69] line 104 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.70] line 104 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.71] line 104 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.72] line 104 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.overflow.18] line 105 arithmetic overflow on unsigned + in out_i + sizeof(uint32_t) /*4ul*/ : SUCCESS
+[base64_encode.overflow.20] line 108 arithmetic overflow on unsigned + in src_i + (unsigned long int)2: SUCCESS
+[base64_encode.array_bounds.13] line 109 array 'alphabet' lower bound in alphabet[(signed long int)((signed int)s[(signed long int)src_i] >> 2)]: SUCCESS
+[base64_encode.array_bounds.14] line 109 array 'alphabet' upper bound in alphabet[(signed long int)((signed int)s[(signed long int)src_i] >> 2)]: SUCCESS
+[base64_encode.pointer_dereference.73] line 109 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.74] line 109 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.75] line 109 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.76] line 109 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.77] line 109 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.78] line 109 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.79] line 109 dereference failure: pointer NULL in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.80] line 109 dereference failure: pointer invalid in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.81] line 109 dereference failure: deallocated dynamic object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.82] line 109 dereference failure: dead object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.83] line 109 dereference failure: pointer outside object bounds in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.84] line 109 dereference failure: invalid integer address in s[(signed long int)src_i]: SUCCESS
+[base64_encode.array_bounds.15] line 110 array 'alphabet' lower bound in alphabet[(signed long int)(((signed int)s[(signed long int)src_i] & 0x3) << 4 | (signed int)s[(signed long int)(src_i + (unsigned long int)1)] >> 4)]: SUCCESS
+[base64_encode.array_bounds.16] line 110 array 'alphabet' upper bound in alphabet[(signed long int)(((signed int)s[(signed long int)src_i] & 0x3) << 4 | (signed int)s[(signed long int)(src_i + (unsigned long int)1)] >> 4)]: SUCCESS
+[base64_encode.overflow.21] line 110 arithmetic overflow on unsigned + in out_i + (unsigned long int)1: SUCCESS
+[base64_encode.overflow.22] line 110 arithmetic overflow on signed shl in ((signed int)s[(signed long int)src_i] & 0x3) << 4: SUCCESS
+[base64_encode.overflow.23] line 110 arithmetic overflow on unsigned + in src_i + (unsigned long int)1: SUCCESS
+[base64_encode.pointer_dereference.85] line 110 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.86] line 110 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.87] line 110 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.88] line 110 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.89] line 110 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.90] line 110 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.91] line 110 dereference failure: pointer NULL in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.92] line 110 dereference failure: pointer invalid in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.93] line 110 dereference failure: deallocated dynamic object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.94] line 110 dereference failure: dead object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.95] line 110 dereference failure: pointer outside object bounds in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.96] line 110 dereference failure: invalid integer address in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.97] line 110 dereference failure: pointer NULL in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.98] line 110 dereference failure: pointer invalid in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.99] line 110 dereference failure: deallocated dynamic object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.100] line 110 dereference failure: dead object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.101] line 110 dereference failure: pointer outside object bounds in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.102] line 110 dereference failure: invalid integer address in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.undefined-shift.1] line 110 shift operand is negative in ((signed int)s[(signed long int)src_i] & 0x3) << 4: SUCCESS
+[base64_encode.array_bounds.17] line 111 array 'alphabet' lower bound in alphabet[(signed long int)(((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2 | (signed int)s[(signed long int)(src_i + (unsigned long int)2)] >> 6)]: SUCCESS
+[base64_encode.array_bounds.18] line 111 array 'alphabet' upper bound in alphabet[(signed long int)(((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2 | (signed int)s[(signed long int)(src_i + (unsigned long int)2)] >> 6)]: SUCCESS
+[base64_encode.overflow.24] line 111 arithmetic overflow on unsigned + in out_i + (unsigned long int)2: SUCCESS
+[base64_encode.overflow.25] line 111 arithmetic overflow on unsigned + in src_i + (unsigned long int)1: SUCCESS
+[base64_encode.overflow.26] line 111 arithmetic overflow on signed shl in ((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2: SUCCESS
+[base64_encode.overflow.27] line 111 arithmetic overflow on unsigned + in src_i + (unsigned long int)2: SUCCESS
+[base64_encode.pointer_dereference.103] line 111 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.104] line 111 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.105] line 111 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.106] line 111 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.107] line 111 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.108] line 111 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.109] line 111 dereference failure: pointer NULL in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.110] line 111 dereference failure: pointer invalid in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.111] line 111 dereference failure: deallocated dynamic object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.112] line 111 dereference failure: dead object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.113] line 111 dereference failure: pointer outside object bounds in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.114] line 111 dereference failure: invalid integer address in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.115] line 111 dereference failure: pointer NULL in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.116] line 111 dereference failure: pointer invalid in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.117] line 111 dereference failure: deallocated dynamic object in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.118] line 111 dereference failure: dead object in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.119] line 111 dereference failure: pointer outside object bounds in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.120] line 111 dereference failure: invalid integer address in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.undefined-shift.2] line 111 shift operand is negative in ((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2: SUCCESS
+[base64_encode.array_bounds.19] line 112 array 'alphabet' lower bound in alphabet[(signed long int)((signed int)s[(signed long int)(src_i + (unsigned long int)2)] & 0x3F)]: SUCCESS
+[base64_encode.array_bounds.20] line 112 array 'alphabet' upper bound in alphabet[(signed long int)((signed int)s[(signed long int)(src_i + (unsigned long int)2)] & 0x3F)]: SUCCESS
+[base64_encode.overflow.28] line 112 arithmetic overflow on unsigned + in out_i + (unsigned long int)3: SUCCESS
+[base64_encode.overflow.29] line 112 arithmetic overflow on unsigned + in src_i + (unsigned long int)2: SUCCESS
+[base64_encode.pointer_dereference.121] line 112 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.122] line 112 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.123] line 112 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.124] line 112 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.125] line 112 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.126] line 112 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)3)]: SUCCESS
+[base64_encode.pointer_dereference.127] line 112 dereference failure: pointer NULL in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.128] line 112 dereference failure: pointer invalid in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.129] line 112 dereference failure: deallocated dynamic object in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.130] line 112 dereference failure: dead object in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.131] line 112 dereference failure: pointer outside object bounds in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.132] line 112 dereference failure: invalid integer address in s[(signed long int)(src_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.overflow.30] line 113 arithmetic overflow on unsigned + in out_i + (unsigned long int)4: SUCCESS
+[base64_encode.overflow.31] line 114 arithmetic overflow on unsigned + in src_i + (unsigned long int)1: SUCCESS
+[base64_encode.array_bounds.21] line 115 array 'alphabet' lower bound in alphabet[(signed long int)((signed int)s[(signed long int)src_i] >> 2)]: SUCCESS
+[base64_encode.array_bounds.22] line 115 array 'alphabet' upper bound in alphabet[(signed long int)((signed int)s[(signed long int)src_i] >> 2)]: SUCCESS
+[base64_encode.pointer_dereference.133] line 115 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.134] line 115 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.135] line 115 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.136] line 115 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.137] line 115 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.138] line 115 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.139] line 115 dereference failure: pointer NULL in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.140] line 115 dereference failure: pointer invalid in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.141] line 115 dereference failure: deallocated dynamic object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.142] line 115 dereference failure: dead object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.143] line 115 dereference failure: pointer outside object bounds in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.144] line 115 dereference failure: invalid integer address in s[(signed long int)src_i]: SUCCESS
+[base64_encode.array_bounds.23] line 116 array 'alphabet' lower bound in alphabet[(signed long int)(((signed int)s[(signed long int)src_i] & 0x3) << 4 | (signed int)s[(signed long int)(src_i + (unsigned long int)1)] >> 4)]: SUCCESS
+[base64_encode.array_bounds.24] line 116 array 'alphabet' upper bound in alphabet[(signed long int)(((signed int)s[(signed long int)src_i] & 0x3) << 4 | (signed int)s[(signed long int)(src_i + (unsigned long int)1)] >> 4)]: SUCCESS
+[base64_encode.overflow.32] line 116 arithmetic overflow on unsigned + in out_i + (unsigned long int)1: SUCCESS
+[base64_encode.overflow.33] line 116 arithmetic overflow on signed shl in ((signed int)s[(signed long int)src_i] & 0x3) << 4: SUCCESS
+[base64_encode.overflow.34] line 116 arithmetic overflow on unsigned + in src_i + (unsigned long int)1: SUCCESS
+[base64_encode.pointer_dereference.145] line 116 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.146] line 116 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.147] line 116 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.148] line 116 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.149] line 116 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.150] line 116 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.151] line 116 dereference failure: pointer NULL in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.152] line 116 dereference failure: pointer invalid in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.153] line 116 dereference failure: deallocated dynamic object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.154] line 116 dereference failure: dead object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.155] line 116 dereference failure: pointer outside object bounds in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.156] line 116 dereference failure: invalid integer address in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.157] line 116 dereference failure: pointer NULL in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.158] line 116 dereference failure: pointer invalid in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.159] line 116 dereference failure: deallocated dynamic object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.160] line 116 dereference failure: dead object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.161] line 116 dereference failure: pointer outside object bounds in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.162] line 116 dereference failure: invalid integer address in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.undefined-shift.3] line 116 shift operand is negative in ((signed int)s[(signed long int)src_i] & 0x3) << 4: SUCCESS
+[base64_encode.array_bounds.25] line 117 array 'alphabet' lower bound in alphabet[(signed long int)(((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2)]: SUCCESS
+[base64_encode.array_bounds.26] line 117 array 'alphabet' upper bound in alphabet[(signed long int)(((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2)]: SUCCESS
+[base64_encode.overflow.35] line 117 arithmetic overflow on unsigned + in out_i + (unsigned long int)2: SUCCESS
+[base64_encode.overflow.36] line 117 arithmetic overflow on unsigned + in src_i + (unsigned long int)1: SUCCESS
+[base64_encode.overflow.37] line 117 arithmetic overflow on signed shl in ((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2: SUCCESS
+[base64_encode.pointer_dereference.163] line 117 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.164] line 117 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.165] line 117 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.166] line 117 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.167] line 117 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.168] line 117 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)2)]: SUCCESS
+[base64_encode.pointer_dereference.169] line 117 dereference failure: pointer NULL in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.170] line 117 dereference failure: pointer invalid in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.171] line 117 dereference failure: deallocated dynamic object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.172] line 117 dereference failure: dead object in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.173] line 117 dereference failure: pointer outside object bounds in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.174] line 117 dereference failure: invalid integer address in s[(signed long int)(src_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.undefined-shift.4] line 117 shift operand is negative in ((signed int)s[(signed long int)(src_i + (unsigned long int)1)] & 0xF) << 2: SUCCESS
+[base64_encode.overflow.38] line 118 arithmetic overflow on unsigned + in out_i + (unsigned long int)3: SUCCESS
+[base64_encode.array_bounds.27] line 120 array 'alphabet' lower bound in alphabet[(signed long int)((signed int)s[(signed long int)src_i] >> 2)]: SUCCESS
+[base64_encode.array_bounds.28] line 120 array 'alphabet' upper bound in alphabet[(signed long int)((signed int)s[(signed long int)src_i] >> 2)]: SUCCESS
+[base64_encode.pointer_dereference.175] line 120 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.176] line 120 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.177] line 120 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.178] line 120 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.179] line 120 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.180] line 120 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)0)]: SUCCESS
+[base64_encode.pointer_dereference.181] line 120 dereference failure: pointer NULL in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.182] line 120 dereference failure: pointer invalid in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.183] line 120 dereference failure: deallocated dynamic object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.184] line 120 dereference failure: dead object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.185] line 120 dereference failure: pointer outside object bounds in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.186] line 120 dereference failure: invalid integer address in s[(signed long int)src_i]: SUCCESS
+[base64_encode.array_bounds.29] line 121 array 'alphabet' lower bound in alphabet[(signed long int)(((signed int)s[(signed long int)src_i] & 0x3) << 4)]: SUCCESS
+[base64_encode.array_bounds.30] line 121 array 'alphabet' upper bound in alphabet[(signed long int)(((signed int)s[(signed long int)src_i] & 0x3) << 4)]: SUCCESS
+[base64_encode.overflow.39] line 121 arithmetic overflow on unsigned + in out_i + (unsigned long int)1: SUCCESS
+[base64_encode.overflow.40] line 121 arithmetic overflow on signed shl in ((signed int)s[(signed long int)src_i] & 0x3) << 4: SUCCESS
+[base64_encode.pointer_dereference.187] line 121 dereference failure: pointer NULL in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.188] line 121 dereference failure: pointer invalid in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.189] line 121 dereference failure: deallocated dynamic object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.190] line 121 dereference failure: dead object in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.191] line 121 dereference failure: pointer outside object bounds in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.192] line 121 dereference failure: invalid integer address in dest[(signed long int)(out_i + (unsigned long int)1)]: SUCCESS
+[base64_encode.pointer_dereference.193] line 121 dereference failure: pointer NULL in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.194] line 121 dereference failure: pointer invalid in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.195] line 121 dereference failure: deallocated dynamic object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.196] line 121 dereference failure: dead object in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.197] line 121 dereference failure: pointer outside object bounds in s[(signed long int)src_i]: SUCCESS
+[base64_encode.pointer_dereference.198] line 121 dereference failure: invalid integer address in s[(signed long int)src_i]: SUCCESS
+[base64_encode.undefined-shift.5] line 121 shift operand is negative in ((signed int)s[(signed long int)src_i] & 0x3) << 4: SUCCESS
+[base64_encode.overflow.41] line 122 arithmetic overflow on unsigned + in out_i + (unsigned long int)2: SUCCESS
+[base64_encode.overflow.42] line 125 arithmetic overflow on unsigned + in out_i + 1ul: SUCCESS
+[base64_encode.unwind.2] line 125 unwinding assertion loop 2: SUCCESS
+[base64_encode.pointer_dereference.199] line 126 dereference failure: pointer NULL in dest[(signed long int)out_i]: SUCCESS
+[base64_encode.pointer_dereference.200] line 126 dereference failure: pointer invalid in dest[(signed long int)out_i]: SUCCESS
+[base64_encode.pointer_dereference.201] line 126 dereference failure: deallocated dynamic object in dest[(signed long int)out_i]: SUCCESS
+[base64_encode.pointer_dereference.202] line 126 dereference failure: dead object in dest[(signed long int)out_i]: SUCCESS
+[base64_encode.pointer_dereference.203] line 126 dereference failure: pointer outside object bounds in dest[(signed long int)out_i]: SUCCESS
+[base64_encode.pointer_dereference.204] line 126 dereference failure: invalid integer address in dest[(signed long int)out_i]: SUCCESS
+[base64_encode.pointer_dereference.205] line 129 dereference failure: pointer NULL in dest[(signed long int)out_len]: SUCCESS
+[base64_encode.pointer_dereference.206] line 129 dereference failure: pointer invalid in dest[(signed long int)out_len]: SUCCESS
+[base64_encode.pointer_dereference.207] line 129 dereference failure: deallocated dynamic object in dest[(signed long int)out_len]: SUCCESS
+[base64_encode.pointer_dereference.208] line 129 dereference failure: dead object in dest[(signed long int)out_len]: SUCCESS
+[base64_encode.pointer_dereference.209] line 129 dereference failure: pointer outside object bounds in dest[(signed long int)out_len]: SUCCESS
+[base64_encode.pointer_dereference.210] line 129 dereference failure: invalid integer address in dest[(signed long int)out_len]: SUCCESS
+
+** 0 of 466 failed (1 iterations)
+VERIFICATION SUCCESSFUL

@@ -1,0 +1,24 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 1174144097
+INFO: Loaded 1 modules   (131 inline 8-bit counters): 131 [0x100c885f0, 0x100c88673), 
+INFO: Loaded 1 PC tables (131 PCs): 131 [0x100c88678,0x100c88ea8), 
+INFO:       37 files found in corpus/
+INFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes
+INFO: seed corpus: files: 37 min: 4b max: 1036b total: 2188b rss: 34Mb
+#38	INITED cov: 48 ft: 100 corp: 35/2180b exec/s: 0 rss: 35Mb
+#41	NEW    cov: 50 ft: 102 corp: 36/2197b lim: 1036 exec/s: 0 rss: 36Mb L: 17/1036 MS: 3 ChangeBinInt-CopyPart-CopyPart-
+#111	REDUCE cov: 50 ft: 102 corp: 36/2195b lim: 1036 exec/s: 0 rss: 36Mb L: 15/1036 MS: 5 EraseBytes-InsertByte-CopyPart-InsertByte-EraseBytes-
+#1109	REDUCE cov: 50 ft: 102 corp: 36/2193b lim: 1036 exec/s: 0 rss: 36Mb L: 13/1036 MS: 3 CrossOver-ChangeByte-EraseBytes-
+#1246	REDUCE cov: 50 ft: 102 corp: 36/2189b lim: 1036 exec/s: 0 rss: 36Mb L: 9/1036 MS: 2 InsertByte-EraseBytes-
+#2792	REDUCE cov: 50 ft: 102 corp: 36/2187b lim: 1046 exec/s: 0 rss: 37Mb L: 7/1036 MS: 1 EraseBytes-
+#3133	REDUCE cov: 50 ft: 102 corp: 36/2185b lim: 1046 exec/s: 0 rss: 37Mb L: 5/1036 MS: 1 EraseBytes-
+#3322	REDUCE cov: 50 ft: 102 corp: 36/2183b lim: 1046 exec/s: 0 rss: 37Mb L: 3/1036 MS: 4 ChangeBinInt-ChangeBit-ChangeBit-EraseBytes-
+#3675	REDUCE cov: 50 ft: 102 corp: 36/2182b lim: 1046 exec/s: 0 rss: 37Mb L: 2/1036 MS: 3 ChangeBinInt-ChangeBit-EraseBytes-
+#5317	REDUCE cov: 50 ft: 102 corp: 36/2181b lim: 1056 exec/s: 0 rss: 37Mb L: 1/1036 MS: 2 ChangeBit-EraseBytes-
+#4194304	pulse  cov: 50 ft: 102 corp: 36/2181b lim: 4096 exec/s: 1398101 rss: 468Mb
+#8388608	pulse  cov: 50 ft: 102 corp: 36/2181b lim: 4096 exec/s: 1198372 rss: 473Mb
+#16777216	pulse  cov: 50 ft: 102 corp: 36/2181b lim: 4096 exec/s: 1198372 rss: 482Mb
+#33554432	pulse  cov: 50 ft: 102 corp: 36/2181b lim: 4096 exec/s: 1157049 rss: 486Mb
+#67108864	pulse  cov: 50 ft: 102 corp: 36/2181b lim: 4096 exec/s: 1118481 rss: 489Mb
+#100566352	DONE   cov: 50 ft: 102 corp: 36/2181b lim: 4096 exec/s: 1105124 rss: 490Mb
+Done 100566352 runs in 91 second(s)
