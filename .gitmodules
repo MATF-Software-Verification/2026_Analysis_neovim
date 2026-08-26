@@ -1,0 +1,5 @@
+[submodule "neovim"]
+	path = neovim
+	url = https://github.com/neovim/neovim.git
+	branch = v0.12.5
+	ignore = untracked

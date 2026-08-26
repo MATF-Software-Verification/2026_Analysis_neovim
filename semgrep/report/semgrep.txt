@@ -1,0 +1,372 @@
+                    
+                    
+┌──────────────────┐
+│ 69 Code Findings │
+└──────────────────┘
+                            
+    neovim/src/nvim/change.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          1623┆ strcat(leader, " ");
+            ⋮┆----------------------------------------
+          1628┆ strcat(leader, p_extra);
+                               
+    neovim/src/nvim/cmdexpand.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          611┆ strncpy(buf + len, s, (size_t)l);  // NOLINT(runtime/printf)
+                          
+    neovim/src/nvim/diff.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          1393┆ strcat(buf, ".orig");
+            ⋮┆----------------------------------------
+          1396┆ strcat(buf, ".rej");
+            ⋮┆----------------------------------------
+          1408┆ strcat(newname, ".new");
+                             
+    neovim/src/nvim/ex_cmds.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          1155┆ strcat(t, newcmd);
+            ⋮┆----------------------------------------
+          1158┆ strcat(t, prevcmd);
+            ⋮┆----------------------------------------
+          1161┆ strcat(t, trailarg);
+            ⋮┆----------------------------------------
+          1214┆ strcat(newcmd, prevcmd);
+            ⋮┆----------------------------------------
+          1215┆ strcat(newcmd, p_shq);
+            ⋮┆----------------------------------------
+          4356┆ strcat(new_start, sub_firstline + copycol);
+                              
+    neovim/src/nvim/ex_docmd.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          3985┆ strcat(new_cmdline, " ");
+            ⋮┆----------------------------------------
+          3986┆ strcat(new_cmdline, arg);
+            ⋮┆----------------------------------------
+          8058┆ strcat(newres, p + srclen);
+                            
+    neovim/src/nvim/fileio.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          2441┆ strcpy(retval, fname);  // NOLINT(runtime/printf)
+            ⋮┆----------------------------------------
+          2465┆ strcpy(s, ext);  // NOLINT(runtime/printf)
+            ⋮┆----------------------------------------
+          3563┆ strcpy(buf + buflen, PATHSEPSTR);  // NOLINT(runtime/printf)
+                          
+    neovim/src/nvim/fold.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          3253┆ strcat(r, s);
+                            
+    neovim/src/nvim/garray.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          157┆ strcpy(s, strings[nelem - 1]);  // NOLINT(runtime/printf)
+                               
+    neovim/src/nvim/insexpand.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          4215┆ strncpy(IObuff, ptr, (size_t)len);  // NOLINT(runtime/printf)
+   
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          5662┆ strcat(compl_pattern.data, "\\k");
+                          
+    neovim/src/nvim/menu.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          1093┆ strcat(tbuffer, "\001");
+                            
+    neovim/src/nvim/normal.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          2015┆ strcat(showcmd_buf, p);
+                              
+    neovim/src/nvim/os/shell.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          251┆ strcat(command, pat[0] + 1);                // exclude first backtick
+            ⋮┆----------------------------------------
+          255┆ strcat(command, " end");
+            ⋮┆----------------------------------------
+          266┆ strcat(command, ">");
+            ⋮┆----------------------------------------
+          274┆ strcat(command, "set nonomatch; ");
+            ⋮┆----------------------------------------
+          276┆ strcat(command, "unset nonomatch; ");
+            ⋮┆----------------------------------------
+          280┆ strcat(command, "glob >");
+            ⋮┆----------------------------------------
+          282┆ strcat(command, "print -N >");
+            ⋮┆----------------------------------------
+          284┆ strcat(command, sh_vimglob_func);
+            ⋮┆----------------------------------------
+          286┆ strcat(command, sh_globstar_opt);
+            ⋮┆----------------------------------------
+          287┆ strcat(command, sh_vimglob_func);
+            ⋮┆----------------------------------------
+          289┆ strcat(command, "echo >");
+            ⋮┆----------------------------------------
+          293┆ strcat(command, tempname);
+            ⋮┆----------------------------------------
+          337┆ strcat(command, "&");               // put the '&' after the redirection
+                              
+    neovim/src/nvim/quickfix.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          4723┆ strcat(name, p + 2);
+            ⋮┆----------------------------------------
+          7536┆ strcat(dirname, "doc/*.\\(txt\\|??x\\)");  // NOLINT
+                            
+    neovim/src/nvim/regexp.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          2558┆ strncpy(retval + len,  // NOLINT(runtime/printf)
+          2559┆         reg_getline_submatch(lnum),
+          2560┆         (size_t)rsm.sm_mmatch->endpos[no].col);
+   
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          11523┆ strcat(code, " + NEWLINE ");
+   
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          11588┆ strncpy(save, &p[last], 2);  // NOLINT(runtime/printf)
+            ⋮┆----------------------------------------
+          11591┆ strncpy(&p[last], save, 2);  // NOLINT(runtime/printf)
+                             
+    neovim/src/nvim/runtime.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          475┆ strcat(buf, prefix);
+                            
+    neovim/src/nvim/search.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          3264┆ strncpy(IObuff, aux, (size_t)i);  // NOLINT(runtime/printf)
+            ⋮┆----------------------------------------
+          3302┆ strncpy(IObuff + i, aux, (size_t)(p - aux));  // NOLINT(runtime/printf)
+                           
+    neovim/src/nvim/spell.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          2672┆ strcat(p, line + curwin->w_cursor.col + repl_from_len);
+            ⋮┆----------------------------------------
+          3444┆ strcat(badword, "/");
+            ⋮┆----------------------------------------
+          3446┆ strcat(badword, "=");
+            ⋮┆----------------------------------------
+          3449┆ strcat(badword, "!");
+            ⋮┆----------------------------------------
+          3451┆ strcat(badword, "?");
+                               
+    neovim/src/nvim/spellfile.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          2168┆ strcat(p, "\n");
+            ⋮┆----------------------------------------
+          2170┆ strcat(p, items[0]);
+            ⋮┆----------------------------------------
+          2171┆ strcat(p, " ");
+            ⋮┆----------------------------------------
+          2172┆ strcat(p, items[1]);
+            ⋮┆----------------------------------------
+          2228┆ strcat(p, "+");
+            ⋮┆----------------------------------------
+          2249┆ strcat(p, "/");
+            ⋮┆----------------------------------------
+          2251┆ strcat(p, items[1]);
+            ⋮┆----------------------------------------
+          2874┆ strcat(p, "/");
+                                  
+    neovim/src/nvim/spellsuggest.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          631┆ strcat(p, sug.su_badptr + stp->st_orglen);
+            ⋮┆----------------------------------------
+          1623┆ strcat(preword, " ");
+   
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          2428┆ strncpy(kword + kwordlen[depth],  // NOLINT(runtime/printf)
+          2429┆         fword + fwordidx[depth],
+          2430┆         (size_t)flen);
+            ⋮┆----------------------------------------
+          2433┆ strncpy(kword + kwordlen[depth],  // NOLINT(runtime/printf)
+          2434┆         uword + uwordidx[depth],
+          2435┆         (size_t)ulen);
+                            
+    neovim/src/nvim/syntax.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          5001┆ strcat(name, "$");
+                         
+    neovim/src/nvim/tag.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          1050┆ strcat(cmd, "\\V");
+                                            
+    neovim/src/nvim/tui/termkey/driver-csi.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+          888┆ strncpy(csi->saved_string, (char *)tk->buffer + tk->buffstart + introlen, len);  //
+               NOLINT(runtime/printf)                                                             
+                             
+    neovim/src/nvim/usercmd.c
+    ❯❱ c.lang.security.insecure-use-strcat-fn.insecure-use-strcat-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcat or strncat used. This is an issue because strcat or
+          strncat can lead to buffer overflow vulns. Fix this by using strcat_s instead.                 
+          Details: https://sg.run/EkRP                                                                   
+                                                                                                         
+          1303┆ strcat(buf, " ");
+            ⋮┆----------------------------------------
+          1305┆ strcat(buf, mod_str);
+                                  
+    neovim/src/nvim/vterm/parser.c
+    ❯❱ c.lang.security.insecure-use-string-copy-fn.insecure-use-string-copy-fn
+          ❰❰ Blocking ❱❱
+          Finding triggers whenever there is a strcpy or strncpy used. This is an issue because strcpy does   
+          not affirm the size of the destination array and strncpy will not automatically NULL-terminate      
+          strings. This can lead to buffer overflows, which can cause program crashes and potentially let an  
+          attacker inject code in the program. Fix this by using strcpy_s instead (although note that strcpy_s
+          is an optional part of the C11 standard, and so may not be available).                              
+          Details: https://sg.run/7oNk                                                                        
+                                                                                                              
+           62┆ strncpy(seq, vt->parser.intermed, len);  // NOLINT(runtime/printf)

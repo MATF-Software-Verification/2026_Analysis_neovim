@@ -1,0 +1,127 @@
+=== run 1 (30s) ===
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 888391976
+INFO: Loaded 1 modules   (131 inline 8-bit counters): 131 [0x1040e85f0, 0x1040e8673), 
+INFO: Loaded 1 PC tables (131 PCs): 131 [0x1040e8678,0x1040e8ea8), 
+INFO:        0 files found in fuzzing/corpus
+INFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes
+INFO: A corpus is not provided, starting from an empty corpus
+#2	INITED cov: 6 ft: 6 corp: 1/1b exec/s: 0 rss: 34Mb
+	NEW_FUNC[1/2]: 0x0001040a0a20 in xmalloc harness.c:19
+	NEW_FUNC[2/2]: 0x0001040a0ab0 in xfree harness.c:28
+#21	NEW    cov: 14 ft: 14 corp: 2/5b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 4 ChangeByte-ChangeByte-CrossOver-CopyPart-
+#73	NEW    cov: 16 ft: 16 corp: 3/9b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 2 EraseBytes-InsertByte-
+#76	NEW    cov: 17 ft: 18 corp: 4/13b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 3 CrossOver-InsertByte-CopyPart-
+#107	NEW    cov: 17 ft: 20 corp: 5/17b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 1 ChangeByte-
+	NEW_FUNC[1/1]: 0x0001040a0e00 in base64_encode base64.c:70
+#167	NEW    cov: 27 ft: 38 corp: 6/21b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 5 ShuffleBytes-ChangeByte-CopyPart-CopyPart-CopyPart-
+#255	NEW    cov: 30 ft: 41 corp: 7/25b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 3 CopyPart-ShuffleBytes-ChangeByte-
+#346	NEW    cov: 31 ft: 42 corp: 8/29b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 1 CrossOver-
+#449	NEW    cov: 32 ft: 43 corp: 9/33b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 3 EraseBytes-InsertByte-CopyPart-
+#555	NEW    cov: 33 ft: 44 corp: 10/37b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 1 ShuffleBytes-
+#753	NEW    cov: 38 ft: 49 corp: 11/41b lim: 4 exec/s: 0 rss: 36Mb L: 4/4 MS: 3 ShuffleBytes-CrossOver-ShuffleBytes-
+#1341	NEW    cov: 38 ft: 50 corp: 12/49b lim: 8 exec/s: 0 rss: 36Mb L: 8/8 MS: 3 ShuffleBytes-InsertByte-CrossOver-
+#1394	NEW    cov: 39 ft: 54 corp: 13/57b lim: 8 exec/s: 0 rss: 36Mb L: 8/8 MS: 3 EraseBytes-ChangeByte-InsertRepeatedBytes-
+#2780	NEW    cov: 39 ft: 55 corp: 14/73b lim: 21 exec/s: 0 rss: 36Mb L: 16/16 MS: 1 CrossOver-
+#3034	NEW    cov: 39 ft: 57 corp: 15/77b lim: 21 exec/s: 0 rss: 36Mb L: 4/16 MS: 4 ChangeBinInt-ChangeBit-ShuffleBytes-CrossOver-
+#4606	NEW    cov: 39 ft: 59 corp: 16/81b lim: 33 exec/s: 0 rss: 37Mb L: 4/16 MS: 2 CopyPart-EraseBytes-
+#4723	NEW    cov: 39 ft: 61 corp: 17/89b lim: 33 exec/s: 0 rss: 37Mb L: 8/16 MS: 2 CopyPart-InsertByte-
+#5245	NEW    cov: 39 ft: 62 corp: 18/109b lim: 38 exec/s: 0 rss: 37Mb L: 20/20 MS: 2 CopyPart-CrossOver-
+#5346	NEW    cov: 41 ft: 64 corp: 19/113b lim: 38 exec/s: 0 rss: 37Mb L: 4/20 MS: 1 CopyPart-
+#5842	NEW    cov: 41 ft: 65 corp: 20/121b lim: 38 exec/s: 0 rss: 37Mb L: 8/20 MS: 1 CopyPart-
+#5969	NEW    cov: 42 ft: 68 corp: 21/137b lim: 38 exec/s: 0 rss: 37Mb L: 16/20 MS: 2 ShuffleBytes-CrossOver-
+#6380	NEW    cov: 42 ft: 69 corp: 22/153b lim: 38 exec/s: 0 rss: 37Mb L: 16/20 MS: 1 CopyPart-
+#6647	NEW    cov: 47 ft: 79 corp: 23/157b lim: 38 exec/s: 0 rss: 37Mb L: 4/20 MS: 2 ChangeBinInt-ChangeByte-
+#7138	NEW    cov: 47 ft: 80 corp: 24/173b lim: 38 exec/s: 0 rss: 37Mb L: 16/20 MS: 1 CopyPart-
+#7195	NEW    cov: 47 ft: 81 corp: 25/197b lim: 38 exec/s: 0 rss: 37Mb L: 24/24 MS: 2 CopyPart-InsertRepeatedBytes-
+#8354	REDUCE cov: 47 ft: 81 corp: 25/193b lim: 48 exec/s: 0 rss: 37Mb L: 12/24 MS: 4 ChangeByte-ChangeASCIIInt-ShuffleBytes-EraseBytes-
+#8606	NEW    cov: 48 ft: 85 corp: 26/225b lim: 48 exec/s: 0 rss: 37Mb L: 32/32 MS: 2 ShuffleBytes-CopyPart-
+#8792	NEW    cov: 48 ft: 86 corp: 27/245b lim: 48 exec/s: 0 rss: 37Mb L: 20/32 MS: 1 CrossOver-
+#9388	NEW    cov: 48 ft: 87 corp: 28/277b lim: 53 exec/s: 0 rss: 37Mb L: 32/32 MS: 1 CopyPart-
+#9554	NEW    cov: 49 ft: 88 corp: 29/281b lim: 53 exec/s: 0 rss: 37Mb L: 4/32 MS: 1 CrossOver-
+#10800	NEW    cov: 49 ft: 89 corp: 30/321b lim: 63 exec/s: 0 rss: 38Mb L: 40/40 MS: 1 CopyPart-
+#12253	NEW    cov: 49 ft: 90 corp: 31/389b lim: 74 exec/s: 0 rss: 38Mb L: 68/68 MS: 3 CopyPart-CopyPart-InsertRepeatedBytes-
+#12294	REDUCE cov: 49 ft: 90 corp: 31/385b lim: 74 exec/s: 0 rss: 38Mb L: 12/68 MS: 1 EraseBytes-
+#13471	REDUCE cov: 49 ft: 90 corp: 31/381b lim: 80 exec/s: 0 rss: 38Mb L: 36/68 MS: 2 CopyPart-CrossOver-
+#14317	REDUCE cov: 49 ft: 90 corp: 31/377b lim: 86 exec/s: 0 rss: 38Mb L: 16/68 MS: 1 EraseBytes-
+#16130	NEW    cov: 49 ft: 93 corp: 32/445b lim: 98 exec/s: 0 rss: 38Mb L: 68/68 MS: 3 CrossOver-ChangeBinInt-InsertRepeatedBytes-
+#16218	REDUCE cov: 49 ft: 93 corp: 32/441b lim: 98 exec/s: 0 rss: 38Mb L: 12/68 MS: 3 InsertByte-EraseBytes-CopyPart-
+#16999	REDUCE cov: 49 ft: 93 corp: 32/421b lim: 104 exec/s: 0 rss: 38Mb L: 48/68 MS: 1 EraseBytes-
+#18441	REDUCE cov: 49 ft: 95 corp: 33/529b lim: 116 exec/s: 0 rss: 38Mb L: 108/108 MS: 2 ChangeASCIIInt-InsertRepeatedBytes-
+#20378	REDUCE cov: 49 ft: 95 corp: 33/521b lim: 135 exec/s: 0 rss: 39Mb L: 40/108 MS: 2 EraseBytes-CopyPart-
+#23359	REDUCE cov: 49 ft: 95 corp: 33/505b lim: 163 exec/s: 0 rss: 39Mb L: 92/92 MS: 1 EraseBytes-
+#25200	REDUCE cov: 49 ft: 95 corp: 33/501b lim: 177 exec/s: 0 rss: 39Mb L: 20/92 MS: 1 EraseBytes-
+#26358	NEW    cov: 49 ft: 96 corp: 34/653b lim: 184 exec/s: 0 rss: 39Mb L: 152/152 MS: 3 ChangeASCIIInt-CopyPart-CopyPart-
+#30484	REDUCE cov: 49 ft: 96 corp: 34/649b lim: 219 exec/s: 0 rss: 40Mb L: 88/152 MS: 1 EraseBytes-
+#39105	REDUCE cov: 49 ft: 96 corp: 34/645b lim: 301 exec/s: 0 rss: 41Mb L: 36/152 MS: 1 EraseBytes-
+#44651	REDUCE cov: 49 ft: 96 corp: 34/633b lim: 349 exec/s: 0 rss: 42Mb L: 140/140 MS: 1 EraseBytes-
+#46907	REDUCE cov: 49 ft: 97 corp: 35/893b lim: 365 exec/s: 0 rss: 42Mb L: 260/260 MS: 1 CopyPart-
+#58317	REDUCE cov: 49 ft: 98 corp: 36/1161b lim: 477 exec/s: 0 rss: 44Mb L: 268/268 MS: 5 ShuffleBytes-CopyPart-ChangeByte-ChangeByte-CrossOver-
+#131485	REDUCE cov: 49 ft: 98 corp: 36/1157b lim: 1200 exec/s: 0 rss: 57Mb L: 256/268 MS: 3 ShuffleBytes-ShuffleBytes-EraseBytes-
+#144916	NEW    cov: 50 ft: 99 corp: 37/1225b lim: 1330 exec/s: 0 rss: 59Mb L: 68/268 MS: 1 InsertRepeatedBytes-
+#152571	REDUCE cov: 50 ft: 99 corp: 37/1193b lim: 1400 exec/s: 0 rss: 61Mb L: 36/268 MS: 5 ChangeBit-ChangeByte-ChangeBinInt-EraseBytes-EraseBytes-
+#154357	REDUCE cov: 50 ft: 99 corp: 37/1185b lim: 1410 exec/s: 0 rss: 61Mb L: 28/268 MS: 1 EraseBytes-
+#160398	REDUCE cov: 50 ft: 99 corp: 37/1177b lim: 1470 exec/s: 0 rss: 62Mb L: 20/268 MS: 1 EraseBytes-
+#177591	REDUCE cov: 50 ft: 99 corp: 37/1169b lim: 1640 exec/s: 0 rss: 65Mb L: 12/268 MS: 3 CMP-CopyPart-EraseBytes- DE: "\010\000\000\000"-
+#443520	NEW    cov: 50 ft: 100 corp: 38/2205b lim: 4096 exec/s: 0 rss: 110Mb L: 1036/1036 MS: 4 CrossOver-CrossOver-ChangeBit-CopyPart-
+#2097152	pulse  cov: 50 ft: 100 corp: 38/2205b lim: 4096 exec/s: 1048576 rss: 478Mb
+#4194304	pulse  cov: 50 ft: 100 corp: 38/2205b lim: 4096 exec/s: 1398101 rss: 492Mb
+#5289097	NEW    cov: 50 ft: 102 corp: 39/2341b lim: 4096 exec/s: 1322274 rss: 493Mb L: 136/1036 MS: 2 CMP-InsertRepeatedBytes- DE: "\377\015"-
+#5554878	REDUCE cov: 50 ft: 102 corp: 39/2337b lim: 4096 exec/s: 1388719 rss: 493Mb L: 132/1036 MS: 1 EraseBytes-
+#8388608	pulse  cov: 50 ft: 102 corp: 39/2337b lim: 4096 exec/s: 1198372 rss: 496Mb
+#16777216	pulse  cov: 50 ft: 102 corp: 39/2337b lim: 4096 exec/s: 1198372 rss: 498Mb
+#33554432	pulse  cov: 50 ft: 102 corp: 39/2337b lim: 4096 exec/s: 1198372 rss: 499Mb
+#36906663	DONE   cov: 50 ft: 102 corp: 39/2337b lim: 4096 exec/s: 1190537 rss: 499Mb
+###### Recommended dictionary. ######
+"\010\000\000\000" # Uses: 1887919
+"\377\015" # Uses: 1449523
+###### End of recommended dictionary. ######
+Done 36906663 runs in 31 second(s)
+=== run 2 (30s) ===
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 919465267
+INFO: Loaded 1 modules   (131 inline 8-bit counters): 131 [0x102e485f0, 0x102e48673), 
+INFO: Loaded 1 PC tables (131 PCs): 131 [0x102e48678,0x102e48ea8), 
+INFO:       38 files found in fuzzing/corpus
+INFO: -max_len is not provided; libFuzzer will not generate inputs larger than 4096 bytes
+INFO: seed corpus: files: 38 min: 4b max: 1036b total: 2336b rss: 34Mb
+#39	INITED cov: 48 ft: 100 corp: 35/2320b exec/s: 0 rss: 35Mb
+#44	NEW    cov: 50 ft: 102 corp: 36/2341b lim: 1036 exec/s: 0 rss: 36Mb L: 21/1036 MS: 5 ChangeBinInt-ChangeBit-ShuffleBytes-ChangeBit-InsertByte-
+#2495	REDUCE cov: 50 ft: 102 corp: 36/2335b lim: 1056 exec/s: 0 rss: 37Mb L: 15/1036 MS: 1 EraseBytes-
+#3705	REDUCE cov: 50 ft: 102 corp: 36/2333b lim: 1066 exec/s: 0 rss: 37Mb L: 13/1036 MS: 5 CopyPart-EraseBytes-ShuffleBytes-ShuffleBytes-EraseBytes-
+#4734	REDUCE cov: 50 ft: 102 corp: 36/2327b lim: 1076 exec/s: 0 rss: 37Mb L: 7/1036 MS: 4 ChangeBinInt-ChangeBinInt-ChangeByte-EraseBytes-
+#5025	REDUCE cov: 50 ft: 102 corp: 36/2326b lim: 1076 exec/s: 0 rss: 37Mb L: 6/1036 MS: 1 EraseBytes-
+#5256	REDUCE cov: 50 ft: 102 corp: 36/2325b lim: 1076 exec/s: 0 rss: 37Mb L: 5/1036 MS: 1 EraseBytes-
+#6863	REDUCE cov: 50 ft: 102 corp: 36/2323b lim: 1086 exec/s: 0 rss: 38Mb L: 3/1036 MS: 2 InsertByte-EraseBytes-
+#7930	REDUCE cov: 50 ft: 102 corp: 36/2322b lim: 1096 exec/s: 0 rss: 38Mb L: 2/1036 MS: 2 CopyPart-EraseBytes-
+#8507	REDUCE cov: 50 ft: 102 corp: 36/2321b lim: 1096 exec/s: 0 rss: 38Mb L: 1/1036 MS: 2 ChangeBit-EraseBytes-
+#4194304	pulse  cov: 50 ft: 102 corp: 36/2321b lim: 4096 exec/s: 1398101 rss: 465Mb
+#8388608	pulse  cov: 50 ft: 102 corp: 36/2321b lim: 4096 exec/s: 1198372 rss: 467Mb
+#16777216	pulse  cov: 50 ft: 102 corp: 36/2321b lim: 4096 exec/s: 1118481 rss: 471Mb
+#33554432	pulse  cov: 50 ft: 102 corp: 36/2321b lim: 4096 exec/s: 1118481 rss: 474Mb
+#33821282	DONE   cov: 50 ft: 102 corp: 36/2321b lim: 4096 exec/s: 1091009 rss: 474Mb
+Done 33821282 runs in 31 second(s)
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 950545943
+INFO: Loaded 1 modules   (131 inline 8-bit counters): 131 [0x1041845f0, 0x104184673), 
+INFO: Loaded 1 PC tables (131 PCs): 131 [0x104184678,0x104184ea8), 
+MERGE-OUTER: 39 files, 0 in the initial corpus, 0 processed earlier
+MERGE-OUTER: attempt 1
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 950584389
+INFO: Loaded 1 modules   (131 inline 8-bit counters): 131 [0x1009705f0, 0x100970673), 
+INFO: Loaded 1 PC tables (131 PCs): 131 [0x100970678,0x100970ea8), 
+INFO: -max_len is not provided; libFuzzer will not generate inputs larger than 1048576 bytes
+MERGE-INNER: using the control file '/var/folders/xp/lbn32j615g7cn9ln59ngjzqm0000gp/T//libFuzzerTemp.Merge33043.txt'
+MERGE-INNER: 39 total files; 0 processed earlier; will process 39 files now
+#1	pulse  cov: 6 ft: 6 exec/s: 0 rss: 34Mb
+#2	pulse  cov: 18 ft: 18 exec/s: 0 rss: 34Mb
+#4	pulse  cov: 37 ft: 47 exec/s: 0 rss: 34Mb
+#8	pulse  cov: 39 ft: 55 exec/s: 0 rss: 34Mb
+#16	pulse  cov: 46 ft: 67 exec/s: 0 rss: 34Mb
+#32	pulse  cov: 50 ft: 91 exec/s: 0 rss: 35Mb
+#39	DONE   cov: 50 ft: 102 exec/s: 0 rss: 35Mb
+MERGE-OUTER: successful in 1 attempt(s)
+MERGE-OUTER: the control file has 3769 bytes
+MERGE-OUTER: consumed 0Mb (35Mb rss) to parse the control file
+MERGE-OUTER: 34 new files with 102 new features added; 50 new coverage edges

@@ -1,285 +1,166 @@
 # Software Verification Analysis of Neovim v0.12.5
 
 Course: *Verifikacija softvera*, Matematički fakultet, Univerzitet u Beogradu
-Target project: [Neovim](https://github.com/neovim/neovim), tag **v0.12.5** (latest stable
-patch release of the v0.12 series)
 
-## 1. Why Neovim, and why these four tools
+## 1. Author info
 
-Neovim is a ~374,000-line C codebase (plus ~146,000 lines of Lua for runtime
-configuration, LSP, and Treesitter integration), built with CMake. It is a mature,
-actively-maintained project with a genuinely strong existing CI pipeline
-(`.github/workflows/`): every push is built and tested under **ASan/UBSan** and **TSan**,
-scanned by **CodeQL**, and scanned nightly by **Coverity**. Re-running any of those on the
-same code would not have produced new information.
+Relja Pešić, index 1064/2024
 
-Auditing the repository turned up three verification categories that are
-**completely absent** from upstream's own pipeline: there is no code-coverage
-measurement anywhere (no `lcov`/`gcov`/coverage flags in `Makefile` or `CMakeLists.txt`),
-no fuzz-testing harness of any kind, and no formal/symbolic verification. That gap is
-where this analysis focuses, using tools from the course:
+## 2. Analyzed project description
 
-1. **Code coverage** (`lcov`/`gcov`) — measure what upstream's own `test/unit` suite
-   actually exercises.
-2. **Fuzz testing** (LLVM `libFuzzer` + ASan/UBSan) — stress-test an untrusted-input
-   parser the coverage pass shows is completely untested.
-3. **Bounded model checking** (`CBMC`) — exhaustively verify memory-safety properties
-   of that same function for all inputs up to a size bound, as a complement to fuzzing's
-   *sampling*.
-4. **Profiling** (`Valgrind`: callgrind, massif, memcheck) — find hot paths and heap
-   behavior in a representative editing workload.
+[Neovim](https://github.com/neovim/neovim) is a ~374,000-line C codebase (plus ~146,000 lines
+of Lua for runtime configuration, LSP, and Treesitter integration), built with CMake — a mature,
+actively-maintained fork of Vim with a real existing CI pipeline of its own.
 
-All four target **the real, unmodified v0.12.5 source** (`neovim/src/nvim/...`); nothing
-in the analyzed code was changed. Supporting files (harnesses, Docker setup, workload
-scripts, raw tool output) live under [`artifacts/`](artifacts/).
+- **Branch/tag analyzed**: `v0.12.5` (latest stable patch release of the v0.12 series)
+- **Commit pinned in the `neovim/` submodule**: `5885a30e1e1225349079e7a1c4a3848aa8e43e42`
+- **Source**: added as a git submodule at [`neovim/`](neovim/), unmodified — [`custom.patch`](custom.patch)
+  is empty because no changes were made to the analyzed source anywhere in this project.
 
-Not attempted, and why: **mock-object testing** doesn't fit — neovim's C code doesn't
-expose the kind of collaborator interfaces the course's mocking examples target.
-**KLEE** was judged redundant with CBMC on the same target function (both are bounded
-symbolic/model-checking techniques; running both on `base64.c` would not have added a
-distinct perspective). **Dafny** has no natural entry point into a 25-year-old existing C
-codebase. **gdb** was kept in reserve for triaging any fuzzer crash, but the fuzzer found
-none to triage.
+Auditing the repository (see `ProjectAnalysisReport.md` §1 for the full writeup) found that
+upstream's own CI already runs ASan/UBSan, TSan, CodeQL, and nightly Coverity on every commit —
+but has **no code-coverage measurement, no fuzz-testing harness, and no formal/symbolic
+verification anywhere**. That gap is what this project's six techniques target, plus two tools
+picked specifically because they are **not** covered by the course's own exercises (course
+materials checked at `../VS-materials/`): `cppcheck` (the course's static-analysis exercises use
+the Clang Static Analyzer / `scan-build`, not `cppcheck`) and `semgrep` (no security-scanning
+tool is covered in the course exercises at all).
 
-## 2. Environment and a build-environment finding
+## 3. Tools used
 
-Development happened on **macOS (Apple Silicon, arm64)**, which turned out to matter:
+All six target the real, unmodified `neovim/src/nvim/...` source at the commit above. Five of
+the six focus on `src/nvim/base64.c` — a small, self-contained, previously **0%-covered**
+function that decodes attacker-shaped input (see report §1/§3) — so that unit testing, fuzzing,
+and model checking can be directly compared on the same target; static analysis and security
+scanning instead sweep the whole of `src/nvim` since they don't require a hand-built harness.
 
-- Apple's bundled `clang` compiles `-fsanitize=fuzzer` but its command-line tools
-  don't ship the `libclang_rt.fuzzer_osx.a` runtime, so linking fails. Fixed by installing
-  full LLVM via Homebrew (`brew install llvm`) and using that `clang` instead.
-- **Valgrind does not support macOS on arm64 at all**, and **`perf` is a Linux-kernel
-  feature**, unusable on macOS in any form. Both were run inside a **Docker Linux
-  container** instead (Docker Desktop's VM has a real, if minimal, Linux kernel).
-- Even inside Docker, `perf` turned out to be unusable: Docker Desktop's VM runs a custom
-  `linuxkit` kernel (`6.12.76-linuxkit`) for which no matching `linux-tools` package
-  exists via `apt`. This is a genuine environment limitation, not a project issue — noted
-  and worked around by relying on Valgrind (callgrind/massif/memcheck) for the profiling
-  section instead of the originally-planned perf comparison.
-- `cbmc` and `lcov` installed and ran natively on macOS without issue.
+| # | Tool/technique | Category | Dir |
+|---|---|---|---|
+| 1 | Unit tests + code coverage (`lcov`/`gcov`) | Testing | [`unit_tests/`](unit_tests/) |
+| 2 | Fuzz testing (LLVM `libFuzzer` + ASan/UBSan) | Fuzzing | [`fuzzing/`](fuzzing/) |
+| 3 | Bounded model checking (`CBMC`) | Model checking | [`cbmc/`](cbmc/) |
+| 4 | CPU profiling (`Valgrind`: `callgrind`) | Profiling | [`valgrind/`](valgrind/) |
+| 5 | Static analysis (`cppcheck`) — *not covered in course* | Static analysis | [`cppcheck/`](cppcheck/) |
+| 6 | Security scanning (`semgrep`) — *not covered in course* | Security | [`semgrep/`](semgrep/) |
 
-Before any analysis, the FAQ's "compile and run it" requirement was satisfied: neovim
-v0.12.5 was configured with CMake+Ninja, built natively (`cmake --preset default`,
-`cmake --build build`), and smoke-tested (`nvim --version`, a headless command, and
-interactive use).
+(Tests and their coverage tool count as a single item per the course's rules; only one
+Valgrind-family tool is used, per the course's cap.)
 
-## 3. Code coverage (`lcov`/`gcov`)
+### 3.1 Unit tests + code coverage
 
-**Setup**: a second build directory (`build-coverage`) was configured with
-`-DCMAKE_C_FLAGS=--coverage -DCMAKE_EXE_LINKER_FLAGS=--coverage`, built, and run against
-upstream's own `test/unit` suite (`cmake --build build-coverage --target unittest`, 46
-spec files driving neovim's C code directly via LuaJIT FFI). Results were captured with
-`lcov --capture` and rendered with `genhtml`.
+**What**: hand-written unit tests for `base64_encode()`/`base64_decode()`
+(`unit_tests/tests/test_base64.c`) — known-vector checks, an all-lengths-0..32 round trip, and
+four rejection cases — built with `--coverage` and measured with `lcov`/`genhtml`.
 
-**Test suite result**: 790 tests ran; **783 passed, 6 skipped, 1 failed**. The one
-failure (`vim_snprintf() positional arguments`, `test/unit/testutil.lua:777`) is a
-mismatch in `%1$*3$.*2$ld`-style positional-argument width/precision handling — it
-reproduces consistently on this macOS/arm64 host and is most likely a libc `snprintf`
-behavioral difference from the glibc/Linux environment neovim's CI actually runs on,
-rather than a bug introduced by the coverage instrumentation (it is unrelated to
-`--coverage` and was not investigated further, as it falls outside this analysis's scope
-— noted here because it was an incidental, real finding from just running the existing
-suite).
+**Setup**: a C compiler with gcov support, `lcov`/`genhtml`, and the `neovim` submodule
+configured once (`cd neovim && cmake --preset default`).
 
-**Coverage result** (full report: [`artifacts/coverage/html/index.html`](artifacts/coverage/html/index.html)):
-
-| Scope | Line coverage | Function coverage |
-|---|---|---|
-| Whole codebase (243 source files) | 6.3% (12,491 / 198,417) | 12.5% (1,106 / 8,837) |
-| `src/nvim/base64.c` | **0.0% (0 / 108)** | **0.0% (0 / 2)** |
-
-The low whole-codebase number is expected and not itself a defect: `test/unit` (46 files)
-only targets self-contained C modules directly; the bulk of neovim's behavioral coverage
-comes from `test/functional` (524 files), which drives a real spawned `nvim` process over
-RPC and wasn't instrumented here (running it under `--coverage` is possible but is a much
-larger, slower pass; out of scope for this focused analysis). What matters for this report
-is the **relative** result: `base64.c` — a small, self-contained function that
-encodes/decodes untrusted-shaped input — has *zero* coverage from upstream's own tests.
-That is exactly the kind of gap fuzzing and bounded verification are suited to.
-
-## 4. Fuzz testing (`base64_decode`/`base64_encode`, LLVM libFuzzer)
-
-**Target**: [`src/nvim/base64.c`](../neovim/src/nvim/base64.c) — chosen because it is one
-of the few files in this codebase that is genuinely self-contained (its only external
-dependency is `xmalloc`/`xfree`), has zero existing test coverage (§3), and does exactly
-the kind of "decode a length-prefixed, attacker-shaped byte string" work fuzzing is built
-for.
-
-**Harness** ([`artifacts/fuzz_base64/harness.c`](artifacts/fuzz_base64/harness.c)):
-`LLVMFuzzerTestOneInput` feeds raw fuzzer bytes into `base64_decode()`. If decoding
-succeeds, it checks a round-trip property: re-encoding the decoded bytes and decoding
-that again must reproduce the original bytes exactly. `xmalloc`/`xfree` are given minimal
-standalone definitions rather than linking upstream's real `memory.c`, so the harness
-compiles the *actual, unmodified* `base64.c` against nvim's real generated headers
-without pulling in the rest of the editor.
-
-**Build**: standard course convention, using Homebrew LLVM for a working fuzzer runtime:
+**Reproduce**:
+```sh
+python3 unit_tests/run_tests.py
 ```
-clang -I build/src/nvim/auto -I build/include -I build/cmake.config -I src \
-  -std=gnu99 -g -O1 -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=undefined \
-  harness.c src/nvim/base64.c -o fuzz_base64
+Full walkthrough: [`unit_tests/RunningTests.md`](unit_tests/RunningTests.md) /
+[`.pdf`](unit_tests/RunningTests.pdf).
+
+### 3.2 Fuzz testing
+
+**What**: `fuzzing/harness.c` feeds raw bytes into `base64_decode()` and checks a
+decode→encode→decode round-trip property, under `-fsanitize=fuzzer,address,undefined`.
+
+**Setup**: a `clang` with a working `-fsanitize=fuzzer` runtime (on macOS, Apple's bundled clang
+compiles the flag but lacks the runtime archive — install Homebrew LLVM:
+`brew install llvm`), and the `neovim` submodule configured once.
+
+**Reproduce**:
+```sh
+./fuzzing/run_fuzz.sh          # or: ./fuzzing/run_fuzz.sh <seconds-per-run>
 ```
 
-**Result**: two runs totaling **~219.5 million executions** (119M + 100M, ~90s each) with
-ASan and UBSan both active — **zero crashes, leaks, timeouts, or round-trip violations**.
-Coverage plateaued at 50/50 edges quickly (most of the function's branch space is small:
-padding-length checks, alphabet lookups, invalid-character rejection), and corpus
-minimization (`-merge=1`) reduced 38 interesting inputs to 33 without losing coverage.
-Full log and minimized corpus: [`artifacts/fuzz_base64/`](artifacts/fuzz_base64/).
+### 3.3 Bounded model checking (CBMC)
 
-**Interpretation**: this is a genuine (if unglamorous) result — for a function with zero
-prior test coverage, 220M adversarial-shaped inputs under memory/UB sanitizers found
-nothing. It's evidence *for* correctness within the bounds fuzzing can reach, not proof
-of it — which is exactly the gap §5 addresses.
+**What**: `cbmc/harness_cbmc.c` marks a 12-byte buffer and its length fully nondeterministic and
+calls `base64_decode()` then `base64_encode()`; CBMC either proves every reachable state safe for
+*all* such inputs, or produces a counterexample.
 
-## 5. Bounded model checking (`CBMC`)
+**Setup**: `cbmc`, and the `neovim` submodule configured once.
 
-Fuzzing samples inputs; it can never prove the absence of a bug, only fail to find one in
-the time given. CBMC does the complementary thing: for inputs up to a fixed size bound,
-it either proves *every* reachable state safe, or produces a concrete counterexample.
-
-**Harness** ([`artifacts/cbmc_base64/harness_cbmc.c`](artifacts/cbmc_base64/harness_cbmc.c)):
-a `main()` that declares a 12-byte buffer, marks every byte and the length
-nondeterministic (`nondet_char()`, `__CPROVER_assume(src_len <= 12)`), and calls
-`base64_decode()` then `base64_encode()` on the result — the same real, unmodified
-`base64.c` used for fuzzing.
-
-**Command**:
-```
-cbmc -I build/src/nvim/auto -I build/include -I build/cmake.config -I src \
-  src/nvim/base64.c artifacts/cbmc_base64/harness_cbmc.c --function main \
-  --bounds-check --pointer-check --signed-overflow-check --unsigned-overflow-check \
-  --div-by-zero-check --unwind 14 --unwinding-assertions --trace
+**Reproduce**:
+```sh
+./cbmc/run_cbmc.sh
 ```
 
-**Result**: `VERIFICATION SUCCESSFUL` — **0 of 466 checked properties failed**
-(array-bounds, pointer-dereference-validity, signed/unsigned arithmetic overflow,
-divide-by-zero, undefined-shift, and unwinding-sufficiency assertions), for *every*
-possible input up to 12 bytes and every possible byte value in it. Full log:
-[`artifacts/cbmc_base64/cbmc_output.log`](artifacts/cbmc_base64/cbmc_output.log).
+### 3.4 CPU profiling (Valgrind: callgrind)
 
-**Interpretation**: combined with §4, this gives two independent, complementary
-guarantees for the same previously-untested function: no memory-safety or arithmetic
-violation exists for *any* input up to 12 bytes (exhaustive proof), and none was found by
-220M adversarial inputs up to 4KB (broad but non-exhaustive sampling). Together they are
-considerably stronger evidence than either alone — and neither existed before this
-analysis, since `base64.c` had 0% test coverage to begin with.
+**What**: `valgrind/workload.lua` runs a headless editing workload (buffer population, extmark
+creation, a buffer-wide substitute, fuzzy matching); `callgrind` profiles it at the instruction
+level.
 
-## 6. Profiling (Valgrind: callgrind, massif, memcheck)
+**Setup**: Docker (Valgrind does not support macOS on arm64, or a Linux `perf`-based
+alternative inside Docker Desktop's `linuxkit` kernel — see report §6 for why callgrind was kept
+and `perf` was not).
 
-**Workload** ([`artifacts/profiling/workload.lua`](artifacts/profiling/workload.lua)): a
-headless Lua script run via `nvim --headless -u NONE -l workload.lua`, exercising four
-things in sequence: populating a large buffer, creating tens of thousands of extmarks
-(exercising the extmark tree, `src/nvim/marktree.c`), a buffer-wide substitute
-(`:%s/quick/QUICK/g` and back), and repeated fuzzy-match queries over a candidate list
-(`vim.fn.matchfuzzy`, `src/nvim/fuzzy.c`). Size is controlled by `$NVIM_PROFILE_SCALE` so
-each Valgrind tool could use a workload sized for its overhead.
-
-**Native baseline** (macOS, RelWithDebInfo, scale=1.0: 200,000 lines, 50,000 extmarks,
-20,000 fuzzy candidates × 20 queries):
-
-| Phase | Time |
-|---|---|
-| Populate buffer | 0.059s |
-| Create extmarks | 0.013s |
-| Substitute (×2) | 0.344s |
-| Fuzzy match (×20) | 0.079s |
-| **Total** | **0.495s** |
-
-The buffer-wide substitute dominates wall time (~70%) even though it's conceptually the
-"simplest" operation — worth digging into.
-
-### 6.1 Instruction-level hot path (`callgrind`, scale=0.02, built inside Docker/Ubuntu)
-
-Top instruction consumers ([full annotate](artifacts/profiling/results/callgrind_annotate.txt)),
-out of 261.3M total instructions:
-
-| % of instructions | Function |
-|---|---|
-| 20.55% | `map_key_impl.c.h: mh_find_bucket_int64_t` (×2 inlined copy) |
-| 12.90% + 1.29% | `memline.c: ml_find_line` |
-| 5.55% | `mh_find_bucket_int64_t` |
-| 2.97% + 2.47% | `marktree.c: key_cmp`, `marktree_getp_aux` |
-| 1.95% | `mbyte.c: utfc_ptr2len` |
-| 0.86% + 0.55% | `regexp.c: vim_regsub_both`, `nfa_regexec_both` |
-
-**This was the non-obvious finding of the whole analysis**: instruction time during a
-bulk substitute is dominated by `mh_find_bucket_int64_t` / `ml_find_line` — the hash-map
-lookup neovim's `memline.c` uses to map a logical line number to its in-memory block —
-not by the regex engine itself (`vim_regsub_both`/`nfa_regexec_both` combined are under
-1.5%), and not by the extmark tree (`marktree.c` functions combined are ~5.5%, present
-because substituting text also has to keep extmarks in sync, but clearly secondary). The
-cost of "substitute across the whole buffer" in this workload is dominated by *finding*
-each line, not by matching or rewriting it.
-
-### 6.2 Heap behavior (`massif`, scale=0.2)
-
-Peak heap: **~24.1 MB** at snapshot 71 of 74
-([full ms_print output](artifacts/profiling/results/ms_print.txt)). Breakdown of the peak:
-
-- **21.1%** (~5.1 MB) — `undo.c: u_save_line_buf` → `u_savecommon` → `u_savesub`,
-  reached via `do_sub` (the `:substitute` command). Every line touched by the substitute
-  gets its pre-substitution text `xstrdup`'d into the undo tree *before* the change is
-  applied.
-- **~52%** (~5.2–12 MB across snapshots) — `memory.c` arena allocator
-  (`arena_alloc`/`arena_memdupz`), driven by `nvim_buf_set_lines` and the Lua↔C value
-  marshalling (`nlua_pop_Array`/`nlua_pop_Object`) that copies the script's line table
-  into the buffer.
-
-**Interpretation**: the heap cost of a bulk substitute isn't the substitute logic itself
-— it's the undo system transparently keeping a full backup of every line about to change.
-This is expected, correct behavior (that's what undo *is*), but it quantifies a real,
-non-obvious cost: editing N lines under `:substitute` allocates roughly N line-copies
-purely for undo, on top of whatever the edit itself needs.
-
-### 6.3 Memory-safety spot check (`memcheck --leak-check=full`, scale=0.05)
-
-```
-HEAP SUMMARY: in use at exit: 4,505,849 bytes in 61,805 blocks
-LEAK SUMMARY:
-  definitely lost: 48 bytes in 1 blocks
-  indirectly lost:  0 bytes in 0 blocks
-  possibly lost:   194 bytes in 8 blocks
-  still reachable: 4,505,607 bytes in 61,796 blocks
+**Reproduce**:
+```sh
+./valgrind/run_valgrind.sh
 ```
 
-The one "definitely lost" allocation traces entirely through LuaJIT's own JIT
-trace-compilation machinery (`lj_mcode_reserve` → `lj_err_register_mcode` →
-`__register_frame` in `libgcc_s`) — LuaJIT registering unwind-frame metadata for a
-just-in-time-compiled trace. This is a known, benign, one-time artifact of embedding
-LuaJIT's JIT (not an interpreter-only build), not a defect in neovim's own C code. Full
-log: [`artifacts/profiling/results/memcheck.log`](artifacts/profiling/results/memcheck.log).
+### 3.5 Static analysis (cppcheck)
 
-## 7. Conclusion
+**What**: `cppcheck` over all of `src/nvim`, driven by CMake's `compile_commands.json` so it sees
+the project's real include paths/defines.
 
-The four analyses reinforce each other rather than standing alone:
+**Setup**: `cppcheck` (and the `neovim` submodule configured once, for `compile_commands.json`).
 
-1. **Coverage measurement** found a concrete, quantified gap upstream's own extensive
-   test suite doesn't fill: `base64.c`, 0% covered.
-2. **Fuzzing** filled that gap with breadth — 220M adversarial inputs, zero findings.
-3. **CBMC** filled it with depth — an exhaustive proof of memory- and arithmetic-safety
-   for all small inputs, a stronger guarantee than sampling can ever give for the sizes it
-   covers.
-4. **Profiling** answered a different question entirely — not "is this code correct?"
-   but "where does its time and memory actually go?" — and the answer (memline's
-   line-lookup hash map dominates instructions; the undo tree dominates heap; the regex
-   and extmark-tree code most people would guess first are comparatively cheap) was
-   genuinely counter-intuitive going in.
+**Reproduce**:
+```sh
+./cppcheck/run_cppcheck.sh
+```
+Raw results: [`cppcheck/report/cppcheck.xml`](cppcheck/report/cppcheck.xml); categorized counts:
+[`cppcheck/report/summary.txt`](cppcheck/report/summary.txt).
 
-None of these four gaps (coverage measurement, fuzzing, formal verification, and a
-profiled look at where a common editing operation actually spends its resources) existed
-in neovim's own considerable CI investment before this analysis, despite that CI already
-running ASan/UBSan/TSan/CodeQL/Coverity on every commit.
+### 3.6 Security scanning (semgrep)
 
-## Reproducing this analysis
+**What**: `semgrep` over all of `src/nvim` with the public `p/c`, `p/security-audit`, and
+`p/cwe-top-25` rulesets — independent of upstream's own CodeQL (different engine, different
+rule authors).
 
-All harnesses, scripts, and raw tool output are under [`artifacts/`](artifacts/):
+**Setup**: `semgrep`.
 
-- `artifacts/coverage/` — coverage-build `.info` file and HTML report.
-- `artifacts/fuzz_base64/` — fuzzer harness, run log, minimized corpus.
-- `artifacts/cbmc_base64/` — CBMC harness and full property-check log.
-- `artifacts/profiling/` — Dockerfile, workload script, and Valgrind result files.
+**Reproduce**:
+```sh
+./semgrep/run_semgrep.sh
+```
+Results: [`semgrep/report/semgrep.txt`](semgrep/report/semgrep.txt) /
+[`semgrep.sarif`](semgrep/report/semgrep.sarif).
 
-Tool versions used: CMake 4.4.2, Ninja 1.13.2, `lcov`/`genhtml` 2.5-0, CBMC 6.11.0,
-Homebrew LLVM/clang 22.1.8 (fuzzing), Valgrind 3.22.0 (inside `ubuntu:24.04`, Docker
-Desktop for Mac).
+## 4. Conclusions
+
+- **Coverage measurement** found a concrete gap upstream's own extensive test suite doesn't
+  fill: `base64.c` sits at 0% line coverage from `test/unit`.
+- **Writing our own unit tests** for that function closed the gap directly: 98.1% line / 100%
+  function / 85.2% branch coverage, all 6 test functions passing.
+- **Fuzzing** stress-tested the same function with tens of millions of adversarial inputs under
+  ASan/UBSan — zero crashes, leaks, or round-trip violations.
+- **CBMC** proved the complementary, exhaustive property: no memory-safety or arithmetic
+  violation exists for *any* input up to 12 bytes (`VERIFICATION SUCCESSFUL`, 0/466 properties
+  failed) — unit tests give confidence by example, fuzzing by adversarial sampling, CBMC by
+  proof; together they're considerably stronger evidence than any one alone.
+- **Callgrind profiling** of a bulk-substitute workload found a genuinely non-obvious hotspot:
+  `memline.c`'s line-lookup hash map dominates instruction count, not the regex engine or the
+  extmark tree most people would guess first.
+- **cppcheck** (2,920 findings, mostly `style`) turned up 134 `error`-severity findings; a manual
+  check of a representative one (`file_search.c:1188`, `uninitStructMember`) confirmed it as a
+  false positive from the tool's limited flow-sensitivity across `if (!url)` guards — a useful
+  reminder that static-analysis output needs verification, not blind trust.
+- **semgrep** flagged 69 uses of `strcat`/`strcpy`/`strncpy` across 28 files (two rule
+  categories) — pattern-based, so it can't reason about buffer sizing; a manual check of one
+  (`fold.c:3253`) confirmed the destination buffer's size already accounts for the concatenated
+  string, i.e. not currently exploitable, but exactly the kind of code that becomes a bug the
+  next time someone edits the size computation without also updating the `strcat`.
+- None of these eight findings (a coverage gap, a from-scratch test suite closing it, a clean
+  fuzzing result, an exhaustive safety proof, a non-obvious profiling hotspot, and two
+  independently-discovered static/security findings) existed before this analysis — despite
+  upstream's own CI already running ASan/UBSan/TSan/CodeQL/Coverity on every commit.
+
+Full narrative, configuration details, and interpretation for every tool:
+[`ProjectAnalysisReport.md`](ProjectAnalysisReport.md).

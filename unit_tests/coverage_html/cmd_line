@@ -1,0 +1,1 @@
+genhtml /Users/rpesic/Work/faks/verifikacija/2026_Analysis_neovim/unit_tests/coverage.info --output-directory /Users/rpesic/Work/faks/verifikacija/2026_Analysis_neovim/unit_tests/coverage_html --rc branch_coverage=1
