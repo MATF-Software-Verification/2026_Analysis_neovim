@@ -24,7 +24,10 @@ verification anywhere**. That gap is what this project's six techniques target, 
 picked specifically because they are **not** covered by the course's own exercises (course
 materials checked at `../VS-materials/`): `cppcheck` (the course's static-analysis exercises use
 the Clang Static Analyzer / `scan-build`, not `cppcheck`) and `semgrep` (no security-scanning
-tool is covered in the course exercises at all).
+tool is covered in the course exercises at all). A seventh, **bonus** tool — Coverity — is
+documented in §3.7; it is not one of the six and not counted toward the course's requirements,
+since it's the same tool upstream already runs nightly (see §3.7 for why it was run locally
+anyway).
 
 ## 3. Tools used
 
@@ -133,6 +136,32 @@ rule authors).
 Results: [`semgrep/report/semgrep.txt`](semgrep/report/semgrep.txt) /
 [`semgrep.sarif`](semgrep/report/semgrep.sarif).
 
+### 3.7 Bonus: Coverity (industrial static analysis)
+
+**What**: `cov-analyze --all` (Synopsys/Black Duck Coverity Static Analysis 2026.3.2) over all of
+`src/nvim`, run entirely locally — no upload to a Coverity Connect server. **Not** one of the six
+required techniques: upstream already runs Coverity nightly (§2). Run anyway because institutional
+access became available mid-project and because upstream's nightly results aren't public, so a
+local run is genuinely new, reproducible data — mainly to see how setting up a commercial/
+industrial static analyzer actually works, in contrast to the free tools above.
+
+**Setup**: a *licensed* `cov-analysis` install (`license.dat` in `<install>/bin/` — unlike every
+other tool in this project, this one cannot be freely reproduced without an active Coverity
+license), a one-time compiler registration (`cov-configure --comptype clangcc --compiler
+/usr/bin/cc -- <neovim's exact required compiler flags>` — see report for why the `--clang`
+template alone wasn't enough), and the `neovim` submodule configured **and fully built** at least
+once (capture replays `compile_commands.json` through `cov-translate` directly rather than
+wrapping the build with `cov-build`, to avoid a macOS Xcode.app requirement `cov-build` has no way
+around — see report for the full story, including a header-regeneration gotcha this order avoids).
+
+**Reproduce**:
+```sh
+./coverity/run_coverity.sh
+```
+Summary (verbatim `cov-analyze` output): [`coverity/report/summary.txt`](coverity/report/summary.txt);
+`base64.c`/`lua/base64.c`-specific findings (empty):
+[`coverity/report/base64_findings.json`](coverity/report/base64_findings.json).
+
 ## 4. Conclusions
 
 - **Coverage measurement** found a concrete gap upstream's own extensive test suite doesn't
@@ -161,6 +190,10 @@ Results: [`semgrep/report/semgrep.txt`](semgrep/report/semgrep.txt) /
   fuzzing result, an exhaustive safety proof, a non-obvious profiling hotspot, and two
   independently-discovered static/security findings) existed before this analysis — despite
   upstream's own CI already running ASan/UBSan/TSan/CodeQL/Coverity on every commit.
+- **Bonus — Coverity** (industrial static analysis, not one of the six): 899 defect occurrences
+  across `src/nvim` with every checker enabled, but **zero** in `base64.c`/`lua/base64.c` — the
+  same function the unit-test/fuzzing/CBMC trio above targets — reinforcing that these techniques
+  catch genuinely different classes of issues rather than overlapping.
 
 Full narrative, configuration details, and interpretation for every tool:
 [`ProjectAnalysisReport.md`](ProjectAnalysisReport.md).

@@ -326,12 +326,99 @@ were deliberately chosen to be outside what the course already taught:
 None of these six results existed in neovim's own considerable CI investment before this
 analysis, despite that CI already running ASan/UBSan/TSan/CodeQL/Coverity on every commit.
 
+## Bonus: Coverity (industrial static analysis)
+
+**Motivation**: not one of the six required techniques — §1 already noted that upstream's own CI
+runs Coverity nightly, so re-running the same tool over the same code was deliberately left out of
+the six as adding no new information. That reasoning turned out to be slightly incomplete:
+upstream's nightly Coverity results are private (they aren't published anywhere this project could
+read them), so a local run is genuinely new, independently reproducible data, not a repeat of
+something already visible. Institutional access to Coverity (Synopsys/Black Duck `cov-analysis
+2026.3.2`, licensed to BlueCat Networks) became available mid-project, and the real motivation for
+running it was practical: seeing how setting up a commercial/industrial static analyzer actually
+works, in contrast to the five free/open tools above, which is why this is documented as a bonus
+rather than folded into the six.
+
+**Setup — what running it actually looked like**: this tool has meaningfully more setup friction
+than every other tool in this project, worth documenting in its own right:
+
+- **Licensing**: unlike `cppcheck`/`semgrep`/`cbmc` (freely installable), Coverity requires a
+  `license.dat` file dropped into `<cov-analysis-install>/bin/`. The BlueCat organization license
+  had in fact expired partway through this exploration and had to be renewed before `cov-analyze`
+  would run at all (`[FATAL] License authorization failure: License has expired.`) — a
+  reproducibility caveat that doesn't exist for any of the six required tools: a reader without an
+  active Coverity license cannot run this section at all.
+- **Compiler registration**: Coverity's build-capture tools need to know exactly which compiler
+  flags are "required" for a given compiler before they'll translate any file compiled with them.
+  The generic `cov-configure --clang` template was not sufficient — `cov-translate` rejected every
+  file with `[ERROR] This /usr/bin/cc compiler command specifies the following arguments which
+  should be marked as required in your configuration`, naming the exact flags (`-O2 -flto=thin
+  -arch arm64 -mmacosx-version-min=... -std=gnu99 -fsigned-char -fstack-protector-strong`) neovim's
+  build passes. Re-running `cov-configure` with those flags explicitly attached
+  (`cov-configure --comptype clangcc --compiler /usr/bin/cc -- <those flags>`) fixed it — a
+  one-time, machine-wide step (it edits the shared Coverity install's `coverity_config.xml`, not
+  anything in this repository).
+- **Build capture without Xcode**: Coverity's normal capture workflow wraps the actual build
+  command (`cov-build <build command>`), intercepting every compiler invocation live. On this
+  machine that failed immediately (`[ERROR] Unable to find valid Xcode installation, build capture
+  cannot continue`) because only Xcode's Command Line Tools were installed, not the full Xcode.app
+  — a real macOS-specific limitation, not a project issue (the same category of environment
+  constraint as Valgrind's macOS/arm64 unavailability in §2). The fix was a different Coverity
+  capture path entirely: replaying CMake's already-generated `compile_commands.json` (LLVM
+  Compilation Database format) directly through Coverity's translator —
+  `cov-manage-emit --dir cov-int replay-from-script -if compile_commands.json` — which never
+  touches `cov-build` or Xcode at all. This is a genuinely useful alternate capture mechanism worth
+  knowing about for exactly this situation (or any CI-like environment where a full IDE toolchain
+  isn't installed).
+- **A gotcha along the way**: while debugging the Xcode issue, an intermediate `ninja -t clean`
+  wiped CMake-generated headers (`*.generated.h`) that `compile_commands.json` still referenced —
+  195 of 202 translation units then failed translation with `fatal error: 'memory.h.generated.h'
+  file not found`. The fix was a plain `ninja -C build` to regenerate them before recapturing.
+  Lesson for reproducing this: don't clean the build directory between generating
+  `compile_commands.json` and running the capture — `replay-from-script` needs every generated
+  header to actually exist on disk, unlike `cov-build`, which would have regenerated them itself
+  as part of driving a live build.
+
+**Result**: `cov-analyze --dir cov-int --all --enable-fnptr --enable-virtual
+--disable-parse-warnings` (every checker enabled, not a curated profile):
+
+| Metric | Result |
+|---|---|
+| Files analyzed | 403 (395 C++, 8 C) |
+| Total LoC | 433,234 |
+| Functions analyzed | 8,997 |
+| Paths analyzed | 3,833,244 |
+| Time taken | 00:02:19 |
+| Defect occurrences | 899 total, across 30 checker categories |
+
+Top categories: `OVERRUN` (258), `STRING_NULL` (204), `NULL_FIELD` (61), `RESOURCE_LEAK` (57),
+`DEADCODE` (47), `TAINTED_SCALAR` (41), `INCONSISTENT_UNION_ACCESS` (37), `INTEGER_OVERFLOW` (34);
+full breakdown in `coverity/report/summary.txt`. As with §7/§8, running with `--all` enables
+aggressive, high-noise checkers (`DEADCODE`, `CONSTANT_EXPRESSION_RESULT`) alongside high-confidence
+ones — the same caution applies here as to cppcheck's and semgrep's un-triaged bulk counts: these
+899 occurrences were not individually re-verified given this project's scope.
+
+Reporting is entirely local: `cov-format-errors --dir cov-int --json-output-v7 ...` (or
+`--html-output ...` for a browsable report) writes results to disk — nothing is uploaded to a
+Coverity Connect server, and none of this requires one.
+
+**`base64.c` finding**: both `src/nvim/base64.c` and `src/nvim/lua/base64.c` (the Lua wrapper
+around it) were captured and analyzed. **Zero Coverity defects in either file**, across all 30
+checker categories. This is a useful data point directly relevant to §§3–5's shared target:
+whole-program dataflow static analysis, with every checker on, found nothing in the exact function
+the hand-written unit tests, fuzzing, and CBMC all converge on — not because those three techniques
+were redundant, but because static analysis is pattern/dataflow-based and isn't built to establish
+the same kind of correctness properties (round-trip behavior, exhaustive bounded safety) those
+three target. Consistent with this report's overall theme: different verification techniques catch
+genuinely different classes of issues.
+
 ## Reproducing this analysis
 
 Tool versions used: CMake 4.4.2, Ninja 1.13.2, `lcov`/`genhtml` 2.5-0, CBMC 6.11.0, Homebrew
 LLVM/clang 22.1.8 (fuzzing), Valgrind 3.22.0 (inside `ubuntu:24.04`, Docker Desktop for Mac),
-cppcheck 2.21.0, semgrep 1.174.0.
+cppcheck 2.21.0, semgrep 1.174.0, Coverity Static Analysis 2026.3.2 (bonus, license-gated —
+see "Bonus: Coverity" above).
 
 See `README.md` §3 for the exact reproduction command for each tool; every tool's directory
-(`unit_tests/`, `fuzzing/`, `cbmc/`, `valgrind/`, `cppcheck/`, `semgrep/`) contains its own
-script and raw output.
+(`unit_tests/`, `fuzzing/`, `cbmc/`, `valgrind/`, `cppcheck/`, `semgrep/`, `coverity/`) contains its
+own script and raw output.
