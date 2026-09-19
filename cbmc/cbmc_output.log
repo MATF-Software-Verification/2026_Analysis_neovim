@@ -117,21 +117,17 @@ SAT checker: instance is UNSATISFIABLE
 [__builtin___memcpy_chk.pointer_arithmetic.27] line 28 pointer relation: pointer outside object bounds in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
 [__builtin___memcpy_chk.pointer_arithmetic.28] line 28 pointer relation: invalid integer address in (const unsigned char *)(const void *)&s[(signed long int)src_i] + (signed long int)sizeof(uint32_t) /*4ul*/ : SUCCESS
 
-<builtin-library-malloc> function malloc
-[malloc.assertion.1] line 31 max allocation size exceeded: SUCCESS
-[malloc.assertion.2] line 36 max allocation may fail: SUCCESS
-
 cbmc/harness_cbmc.c function main
-[main.overflow.1] line 31 arithmetic overflow on unsigned + in i + 1ul: SUCCESS
-[main.array_bounds.1] line 32 array 'src' upper bound in src[(signed long int)i]: SUCCESS
+[main.overflow.1] line 59 arithmetic overflow on unsigned + in i + 1ul: SUCCESS
+[main.array_bounds.1] line 60 array 'src' upper bound in src[(signed long int)i]: SUCCESS
 
 cbmc/harness_cbmc.c function xfree
-[xfree.precondition_instance.1] line 23 free argument must be NULL or valid pointer: SUCCESS
-[xfree.precondition_instance.2] line 23 free argument must be dynamic object: SUCCESS
-[xfree.precondition_instance.3] line 23 free argument has offset zero: SUCCESS
-[xfree.precondition_instance.4] line 23 double free: SUCCESS
-[xfree.precondition_instance.5] line 23 free called for new[] object: SUCCESS
-[xfree.precondition_instance.6] line 23 free called for stack-allocated object: SUCCESS
+[xfree.precondition_instance.1] line 51 free argument must be NULL or valid pointer: SUCCESS
+[xfree.precondition_instance.2] line 51 free argument must be dynamic object: SUCCESS
+[xfree.precondition_instance.3] line 51 free argument has offset zero: SUCCESS
+[xfree.precondition_instance.4] line 51 double free: SUCCESS
+[xfree.precondition_instance.5] line 51 free called for new[] object: SUCCESS
+[xfree.precondition_instance.6] line 51 free called for stack-allocated object: SUCCESS
 
 neovim/src/nvim/base64.c function base64_decode
 [base64_decode.assertion.1] line 147 assertion src != NULL: SUCCESS
@@ -502,5 +498,5 @@ neovim/src/nvim/base64.c function base64_encode
 [base64_encode.pointer_dereference.209] line 129 dereference failure: pointer outside object bounds in dest[(signed long int)out_len]: SUCCESS
 [base64_encode.pointer_dereference.210] line 129 dereference failure: invalid integer address in dest[(signed long int)out_len]: SUCCESS
 
-** 0 of 466 failed (1 iterations)
+** 0 of 464 failed (1 iterations)
 VERIFICATION SUCCESSFUL

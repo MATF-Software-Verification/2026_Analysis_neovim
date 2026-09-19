@@ -9,7 +9,7 @@
 
 #include "nvim/base64.h"
 
-#define MAX_LEN 12
+#define MAX_LEN 16
 
 // Never defined -- a call to a declared-but-undefined function is CBMC's
 // standard idiom for "return a fully nondeterministic value of this type".

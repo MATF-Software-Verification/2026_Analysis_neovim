@@ -12,5 +12,5 @@ cbmc \
   -I neovim/build/src/nvim/auto -I neovim/build/include -I neovim/build/cmake.config -I neovim/src \
   neovim/src/nvim/base64.c cbmc/harness_cbmc.c --function main \
   --bounds-check --pointer-check --signed-overflow-check --unsigned-overflow-check \
-  --div-by-zero-check --unwind 14 --unwinding-assertions --trace \
+  --div-by-zero-check --unwind 18 --unwinding-assertions --trace \
   | tee cbmc/cbmc_output.log
