@@ -11,11 +11,39 @@
 
 #define MAX_LEN 12
 
+// Never defined -- a call to a declared-but-undefined function is CBMC's
+// standard idiom for "return a fully nondeterministic value of this type".
+// The declaration matters: without it, C's implicit-function-declaration
+// rule would assume an `int` return (truncated to `char` on assignment
+// below), which happens to cover the same value range here but isn't
+// conforming C.
+char nondet_char(void);
+
+// Old implementation: called the real `malloc` and assumed it succeeds.
+// This worked, but relied on CBMC's name-based interception of `malloc`
+// (CBMC never actually links/executes glibc's allocator -- by default it
+// substitutes its own builtin, which never fails unless --malloc-may-fail
+// is passed). The __CPROVER_assume below was only there to guard against
+// that flag.
+//
+//   void *xmalloc(size_t size)
+//   {
+//     void *p = malloc(size);
+//     __CPROVER_assume(size == 0 || p != NULL);
+//     return p;
+//   }
+//
+// New implementation: mock malloc explicitly with the same builtin CBMC's
+// own `malloc` stub uses internally, so the harness doesn't depend on
+// CBMC's name-based interception or its command-line flags -- it makes
+// clear that we assume the allocator is correct and want CBMC to reason
+// about base64_decode()/base64_encode() only.
 void *xmalloc(size_t size)
 {
-  void *p = malloc(size);
-  __CPROVER_assume(size == 0 || p != NULL);
-  return p;
+  if (size == 0) {
+    return NULL;
+  }
+  return __CPROVER_allocate(size, 0);
 }
 
 void xfree(void *ptr)
