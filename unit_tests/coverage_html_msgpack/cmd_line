@@ -1,0 +1,1 @@
+genhtml /Users/rpesic/Work/faks/verifikacija/2026_Analysis_neovim/unit_tests/coverage_msgpack.info --output-directory /Users/rpesic/Work/faks/verifikacija/2026_Analysis_neovim/unit_tests/coverage_html_msgpack --rc branch_coverage=1 --ignore-errors inconsistent,unsupported,category

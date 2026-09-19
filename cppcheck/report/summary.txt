@@ -1,22 +1,22 @@
-2920 findings total
+2982 findings total
 
 By severity:
-   2754  style
-    134  error
+   2815  style
+    135  error
      27  warning
       5  portability
 
 By check id:
     829  constVariablePointer
-    717  constParameterPointer
+    720  constParameterPointer
     604  badBitmaskCheck
-    143  variableScope
+    144  variableScope
     116  uninitStructMember
     109  constParameterCallback
      98  redundantPointerOp
+     92  knownConditionTrueFalse
      43  shadowFunction
      38  unreadVariable
-     35  knownConditionTrueFalse
      28  moduloofone
      26  constVariable
      25  compareValueOutOfTypeRangeError
@@ -36,8 +36,8 @@ By check id:
       2  redundantCondition
       2  multiCondition
       2  legacyUninitvar
-      2  knownPointerToBool
       2  unreachableCode
+      2  knownPointerToBool
       2  duplicateBreak
       2  compareBoolExpressionWithInt
       2  invalidPrintfArgType_uint
@@ -49,7 +49,8 @@ By check id:
       1  autoVariables
       1  invalidPrintfArgType_sint
       1  duplicateConditionalAssign
-      1  constParameter
       1  syntaxError
+      1  constParameter
       1  clarifyCalculation
       1  objectIndex
+      1  preprocessorErrorDirective

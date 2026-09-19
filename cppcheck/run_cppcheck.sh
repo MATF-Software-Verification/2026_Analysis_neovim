@@ -20,6 +20,7 @@ mkdir -p cppcheck/report
 cppcheck \
   --project="$COMPILE_DB" \
   --file-filter="$(pwd)/neovim/src/nvim/*" \
+  --file-filter="$(pwd)/neovim/src/mpack/*" \
   --enable=warning,style,performance,portability \
   --inline-suppr \
   --suppress=missingIncludeSystem \

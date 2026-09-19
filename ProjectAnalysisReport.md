@@ -38,6 +38,47 @@ counted tool set — the course caps this category at one Valgrind tool — but 
 findings are noted as an aside in §6.3 since they were genuinely informative and cost nothing
 extra to mention.
 
+### 1.1 A second target: the msgpack-rpc wire format
+
+`base64.c` alone left this project's own unit-testing/fuzzing/CBMC work limited to a single
+function, even though cppcheck and semgrep already sweep the whole of `src/nvim`. Rather than
+stop there, the `neovim/` submodule's own source tree was searched directly for another
+candidate in the same shape as `base64.c`: small, self-contained, and doing exactly the "parse
+attacker-shaped bytes" work these techniques are built for.
+
+**msgpack-rpc's decode/encode primitives** (`src/nvim/msgpack_rpc/unpacker.c`/`packer.c`) stood
+out for a concrete reason, confirmed by trial-compiling each candidate file standalone rather
+than guessing from a `grep` for `curbuf`/`emsg`: their low-level functions —
+`unpack_integer()`/`unpack_uint_or_sint()`/`unpack_string()`/`unpack_array()`/`unpack_skip()` on
+the decode side, `mpack_integer()`/`mpack_uint64()`/`mpack_str()`/`mpack_bin()`/`mpack_raw()` on
+the encode side — sit directly on top of the vendored MessagePack tokenizer/parser at
+`src/mpack/{mpack_core,object,conv}.c` (578 + 200 + 374 lines), which has **zero** dependencies on
+the rest of neovim (confirmed by compiling it completely alone: only libc and itself). That's
+more self-contained than `base64.c`, not less, and it parses the exact same "untrusted,
+length-prefixed, attacker-shaped bytes" shape — here, msgpack-rpc messages and ShaDa file records
+(see §5a's finding for where this specifically matters) instead of base64 text.
+
+**What's deliberately out of scope, and why**: `unpacker.c` and `packer.c` as *whole files* are
+not clean drop-ins the way `base64.c` was. `unpacker_parse_header()`/`unpacker_advance()`/
+`unpack_keydict()` need the generated API dispatch table (`msgpack_rpc_get_handler_for()`), the
+arena allocator, and UI-client globals (`grid_line_buf_*`, `ui_client_get_redraw_handler()`,
+etc.); `packer.c`'s `mpack_object()`/`mpack_object_inner()` need Lua refs
+(`api_free_luaref()`) for its generic-`Object`-tree-walking path. Stubbing all of that to make
+these two files link would be a much bigger surface than this project's established "just stub
+`xmalloc`/`xfree`" convention — so this project's harnesses call only the five/five low-level
+functions listed above, while still compiling `unpacker.c`/`packer.c` as whole, real, unmodified
+files (per this project's own rule) with the unreached code paths satisfied by `abort()`-bodied
+stubs (documented in each harness) that make an accidental call to them fail loudly instead of
+silently returning nonsense.
+
+This target paid off immediately and far beyond a coverage-percentage argument: **CBMC found a
+real, exploitable bug** in `unpack_string()` — see §5a for the full writeup, including a
+standalone ASan reproduction independent of CBMC. Unlike `base64.c`, coverage of this target was
+not separately pre-measured against upstream's `test/unit` suite the same way `base64.c`'s 0%
+figure was (§3) — re-running that whole-codebase coverage pass a second time was judged a worse
+use of remaining time than just building the harnesses and seeing what they found, which is
+exactly what happened.
+
 ## 2. Environment
 
 Development happened on **macOS (Apple Silicon, arm64)**, which mattered in a few ways:
@@ -112,29 +153,121 @@ question is asking about. The remaining uncovered lines/branches are almost enti
 arithmetic-edge-case checks inside the `invalid:` path (e.g. `acc_len > 4` after certain bit
 patterns) that are hard to reach without also triggering an earlier, coarser check first.
 
+**msgpack-rpc** (`unit_tests/tests/test_msgpack.c`, see §1.1 for the target/scope rationale):
+same no-framework `CHECK()`-macro style, targeting `unpack_integer()`/`unpack_string()`/
+`unpack_array()` and `mpack_integer()`/`mpack_str()`:
+
+- `test_known_vectors_decode` — hand-built byte sequences straight from the MessagePack spec's
+  type-tag table (fixint/uint8/16/32/64, int8/16/32, fixstr/str8), decoded and checked against
+  the expected value — an external oracle independent of this codebase's own encoder, the same
+  role RFC 4648 plays for `base64.c`.
+- `test_roundtrip_integer_boundaries` — every integer at every `mpack_integer()` encoding-width
+  boundary, encoded then decoded, deterministically forcing every width branch. Trial-compiling a
+  small dump program to print the real encoded bytes (rather than assuming from the
+  `uint8/16/32/64` naming) turned up a genuinely non-obvious implementation detail: the
+  uint64-tag (`0xcf`) threshold is `0xfffffff` (2^28-1, ~268M), not `0xffffffff` (2^32-1) as the
+  type names suggest — values from `0x10000000` through `0xffffffff` get the full 8-byte encoding
+  instead of the 4-byte uint32 one. Still spec-compliant (a decoder must accept any valid width),
+  just non-minimal; the boundary list is built around the *real* threshold.
+- `test_roundtrip_string_lengths` — string lengths swept across the fixstr(0–31)/str8(32–254)/
+  str16(255+) boundaries.
+- Four rejection tests: a truncated token, a wrong-type token where an integer was expected, a
+  string declaring a length past what the buffer actually has left, and a non-array token passed
+  to `unpack_array()`.
+
+**Result**: all 7 test functions pass. Coverage, scoped to the 5 files this target spans
+(`src/mpack/{mpack_core,object,conv}.c`, `src/nvim/msgpack_rpc/{unpacker,packer}.c`):
+
+| Metric | Result |
+|---|---|
+| Lines | 13.1% (166/1263) |
+| Functions | 20.7% (18/87) |
+| Branches | 8.4% (70/830) |
+
+Full report: `unit_tests/coverage_html_msgpack/index.html`. **Interpretation — much lower than
+`base64.c`'s 98.1%, and expected to be**: unlike `base64.c`, where the tested functions are
+essentially the whole file, this number covers 5 whole files that include large amounts of code
+this project deliberately scoped out (§1.1) — `unpacker_parse_header`/`unpacker_advance`/
+`unpack_keydict`, `packer.c`'s Lua-ref/object-tree-walking path, and `object.c`'s tree-walking
+parser (`mpack_parse`), which is only reached through `unpack_skip()` — a function the fuzz
+harnesses drive (§4) but this unit-test suite deliberately doesn't call, to keep its assertions
+scoped to functions with a clear, checkable contract. The low percentage is a direct, honest
+consequence of that scoping choice, not a sign the *targeted* functions are weakly tested —
+`object.c` shows 0% here for exactly that reason.
+
 ## 4. Fuzz testing (LLVM `libFuzzer`)
 
 **Target**: the same `base64_decode()`/`base64_encode()`, chosen because it's genuinely
 self-contained, has zero existing coverage (§3), and does exactly the "decode a length-prefixed,
 attacker-shaped byte string" work fuzzing is built for.
 
-**Harness** (`fuzzing/harness.c`): `LLVMFuzzerTestOneInput` feeds raw fuzzer bytes into
-`base64_decode()`. If decoding succeeds, it checks a round-trip property: re-encoding the
-decoded bytes and decoding that again must reproduce the original bytes exactly.
+**Two complementary harnesses** target the same pair of functions from opposite directions:
+
+- **`fuzzing/harness.c`** (decode-first): `LLVMFuzzerTestOneInput` feeds raw fuzzer bytes
+  directly into `base64_decode()`. If decoding succeeds, it checks a round-trip property:
+  re-encoding the decoded bytes and decoding that again must reproduce the original bytes
+  exactly. This is the more adversarial direction — since most raw fuzzer bytes are malformed
+  base64, it stresses `base64_decode()`'s rejection paths (bad padding, invalid alphabet
+  characters, wrong lengths) directly, which is exactly the untrusted-input parsing surface
+  fuzzing is built for.
+- **`fuzzing/harness_encode.c`** (encode-first, added as a complementary check): feeds raw
+  fuzzer bytes into `base64_encode()` first — which accepts *any* byte sequence unconditionally,
+  so there's no rejection step to gate on — then checks an encode→decode fidelity round trip:
+  decoding the encoded output must reproduce the original bytes exactly. Where the decode-first
+  harness exercises decode's robustness on a broad, mostly-malformed input space, this harness
+  gives a direct correctness check of the encode/decode correspondence on a narrower,
+  always-well-formed one; the two together cover more of the interface than either alone.
 
 **Build**: `clang -fsanitize=fuzzer,address,undefined -fno-sanitize-recover=undefined`, linking
-the harness directly against the real, unmodified `base64.c` (see `fuzzing/run_fuzz.sh`).
+each harness directly against the real, unmodified `base64.c` (see `fuzzing/run_fuzz.sh`, which
+builds and runs both).
 
-**Result**: two runs (`fuzzing/fuzz_run.log`) — no crashes, leaks, timeouts, or round-trip
-violations. Coverage plateaus quickly at 50/50 edges (most of the function's branch space is
-small: padding-length checks, alphabet lookups, invalid-character rejection). Corpus
-minimization (`-merge=1`) reduces the corpus without losing coverage; minimized corpus:
-`fuzzing/corpus_minimized/`.
+**Result**: two runs per harness (`fuzzing/fuzz_run.log`, sections clearly labeled per harness)
+— no crashes, leaks, timeouts, or round-trip violations in either. Coverage plateaus quickly at
+50/50 edges for the decode-first harness (most of the function's branch space is small:
+padding-length checks, alphabet lookups, invalid-character rejection). Corpus minimization
+(`-merge=1`) reduces each corpus without losing coverage; minimized corpora:
+`fuzzing/corpus_minimized/` (decode-first) and `fuzzing/corpus_encode_minimized/`
+(encode-first).
 
-**Interpretation**: for a function with zero prior test coverage, tens of millions of
-adversarial-shaped inputs under memory/UB sanitizers found nothing. That's evidence *for*
-correctness within the bounds fuzzing can reach — sampling, not proof — which is exactly the gap
-§5 addresses.
+**Interpretation**: for a function pair with zero prior test coverage, tens of millions of
+adversarial-shaped inputs under memory/UB sanitizers, from both directions of the
+encode/decode interface, found nothing. That's evidence *for* correctness within the bounds
+fuzzing can reach — sampling, not proof — which is exactly the gap §5 addresses.
+
+**msgpack-rpc** (see §1.1 for the target/scope rationale): the same decode-first/encode-first
+pair, retargeted.
+
+- **`fuzzing/harness_msgpack.c`** (decode-first): feeds raw fuzzer bytes into `unpack_skip()`
+  (which drives the full tokenizer/parser in `object.c`), `unpack_array()`, `unpack_integer()`,
+  and `unpack_string()`, each on its own `{ptr, size}` view of the same bytes. No round-trip
+  property to check here (most random bytes aren't valid msgpack) — this harness is purely a
+  crash/UB check on the tokenizer's rejection paths, the msgpack analogue of `harness.c`.
+- **`fuzzing/harness_msgpack_encode.c`** (encode-first): takes the first 8 fuzzer bytes as an
+  `int64_t`, encodes it with `mpack_integer()`, decodes it back with `unpack_integer()`, and
+  checks the round trip; does the same for the remaining bytes as a string via
+  `mpack_str()`/`unpack_string()`.
+
+**Build**: identical `clang -fsanitize=fuzzer,address,undefined` invocation as the base64
+harnesses, compiling each harness directly against the real, unmodified `unpacker.c`/`packer.c`
+plus the vendored `src/mpack/{mpack_core,object,conv}.c` tokenizer (see
+`fuzzing/run_fuzz.sh`, which now builds and runs all four harnesses).
+
+**Result** (`fuzzing/fuzz_run.log`, sections labeled per harness): decode-first ran ~10.1M total
+executions (5,161,605 + 4,952,831 across the two runs) driving `unpack_skip()`'s full
+tokenizer/parser plus the three individual functions on the same bytes; encode-first ran ~117.7M
+total executions (58,552,772 + 59,188,346) round-tripping arbitrary integers and strings through
+`mpack_integer()`/`unpack_integer()` and `mpack_str()`/`unpack_string()`. **No crashes, leaks, or
+round-trip violations in either harness.** Minimized corpora: `fuzzing/corpus_msgpack_minimized/`
+(decode-first) and `fuzzing/corpus_msgpack_encode_minimized/` (encode-first).
+
+**Interpretation**: fuzzing alone did not find the `unpack_string()` bug documented in §5a within
+the time budget run here — consistent with that bug needing a fairly specific byte pattern (a
+declared length that lands in a narrow window relative to the header size actually consumed,
+§5a) rather than being reachable from a large fraction of the input space. This is itself a useful
+data point for this project's overall theme: fuzzing's breadth and CBMC's exhaustiveness are
+genuinely complementary, not redundant — here, the bounded, exhaustive technique found something
+the adversarial-sampling one (at this time budget) did not.
 
 ## 5. Bounded model checking (CBMC)
 
@@ -147,9 +280,9 @@ and the length nondeterministic (`nondet_char()`, `__CPROVER_assume(src_len <= 1
 `base64_decode()` then `base64_encode()` on the result — the same real, unmodified `base64.c`.
 
 **Command** (`cbmc/run_cbmc.sh`): `--bounds-check --pointer-check --signed-overflow-check
---unsigned-overflow-check --div-by-zero-check --unwind 14 --unwinding-assertions --trace`.
+--unsigned-overflow-check --div-by-zero-check --unwind 18 --unwinding-assertions --trace`.
 
-**Result**: `VERIFICATION SUCCESSFUL` — **0 of 466 checked properties failed**
+**Result**: `VERIFICATION SUCCESSFUL` — **0 of 464 checked properties failed**
 (array-bounds, pointer-dereference-validity, signed/unsigned arithmetic overflow,
 divide-by-zero, undefined-shift, and unwinding-sufficiency assertions), for *every* possible
 input up to 12 bytes and every possible byte value in it. Full log: `cbmc/cbmc_output.log`.
@@ -160,6 +293,118 @@ cases and edge lengths (unit tests), no violation found across tens of millions 
 inputs (fuzzing, broad but non-exhaustive), and no violation possible for *any* input up to 12
 bytes (CBMC, exhaustive but bounded). None of the three existed before this analysis, since
 `base64.c` had 0% test coverage to begin with.
+
+### 5a. msgpack-rpc, and a real finding
+
+**Harness** (`cbmc/harness_msgpack_cbmc.c`): same shape — a 12-byte nondet buffer and length —
+calling `unpack_integer()`, `unpack_string()`, and `unpack_array()` on it. `unpack_skip()`
+(object.c's full tree-walking parser) is deliberately excluded from this bounded proof: it has a
+much larger unwind requirement (unbounded container nesting depth) that would make this proof
+intractable at a useful bound; it's covered by fuzzing instead (§4).
+
+**Command**: identical check flags, `--unwind 14` (the internal loops here — `mpack_rvalue()`'s
+byte-accumulation loop for a uint64/int64 payload — max out at 8 iterations, so this bound is
+generous, not tight, unlike base64's, which needs to cover the full input length).
+
+**A macOS-specific CBMC limitation, worked around**: CBMC's C front-end cannot parse the Apple
+Blocks syntax (`int (^)(const struct dirent *)`) that macOS's real `<dirent.h>` declares for
+`scandir_b()` under `#ifdef __BLOCKS__` — pulled in transitively via `<uv.h>`, which
+`unpacker.c` includes but (confirmed by `nm -u` on the compiled object file) never actually calls
+anything from. `cbmc/stub_headers/dirent.h` shadows the system header with one that
+`#undef`s `__BLOCKS__` before deferring to it via `#include_next`, which makes the real header
+skip that one declaration. Only needed for CBMC — the clang-based fuzzing/unit-test builds use
+the real header directly and never hit this parser limitation.
+
+**Result**: `VERIFICATION FAILED` — **1 of 4377 checked properties failed**, in `unpack_string()`:
+
+```
+Violated property:
+  file neovim/src/nvim/msgpack_rpc/unpacker.c function unpack_string line 550 thread 0
+  arithmetic overflow on unsigned - in size2 - (unsigned long int)tok.length
+  !overflow("-", size_t, size2, (unsigned long int)tok.length)
+```
+
+Full log and counterexample trace: `cbmc/cbmc_output_msgpack.log`.
+
+**The bug**: `unpack_string()` (`neovim/src/nvim/msgpack_rpc/unpacker.c:534-552`):
+
+```c
+String unpack_string(const char **data, size_t *size)
+{
+  const char *data2 = *data;
+  size_t size2 = *size;
+  mpack_token_t tok;
+
+  int result = mpack_rtoken(&data2, &size2, &tok);   // consumes the type-tag+length header
+  if (result || (tok.type != MPACK_TOKEN_STR && tok.type != MPACK_TOKEN_BIN)) {
+    return (String)STRING_INIT;
+  }
+  if (*size < tok.length) {           // BUG: checks *size (before the header was consumed)
+    return (String)STRING_INIT;       //      instead of size2 (what's left after it)
+  }
+  (*data) = data2 + tok.length;
+  (*size) = size2 - tok.length;       // underflows whenever size2 < tok.length <= *size
+  return cbuf_as_string((char *)data2, tok.length);
+}
+```
+
+`mpack_rtoken()` consumes 2/3/5 bytes for a `str8`/`str16`/`str32` type-tag+length header before
+`unpack_string()`'s own guard runs. That guard compares the declared payload length
+(`tok.length`) against `*size` — the size *before* that header was consumed — instead of
+`size2`, the size *after*. Any declared length `L` with `size2 < L <= *size` (trivially satisfied
+by `L = *size`, i.e. a tag claiming the payload fills the *entire original buffer, header
+included*) slips past the guard, and `size2 - tok.length` wraps around to a number near
+`SIZE_MAX`. The function's own doc comment ("data and size are preserved... in cause of
+failure") is also violated by this path — it isn't treated as a failure at all.
+
+**Standalone confirmation, independent of CBMC** (`cbmc/finding_unpack_string_underflow_repro.c`):
+a 5-byte buffer `{0xd9, 0x05, 'a', 'b', 'c'}` — a `str8` tag declaring length 5 (the whole
+buffer), with the 2-byte header leaving only 3 actual payload bytes. Built and run with
+`-fsanitize=address`:
+
+```
+==ERROR: AddressSanitizer: heap-buffer-overflow ... READ of size 1
+    #0 ... in main
+0x... is located 0 bytes after 5-byte region [...]
+    allocated by thread T0 here:
+    #0 ... in malloc
+```
+
+`unpack_string()` returns `String{ .data = buf+2, .size = 5 }` — claiming 5 bytes where only 3
+exist — and leaves `*size = 0xfffffffffffffffe`. Reading the claimed string crashes immediately
+under ASan; a caller that instead trusts the corrupted `*size` for a *subsequent* unpack call
+would believe there are roughly 2^64 bytes of buffer left and could read arbitrarily far past it.
+
+**Where this is actually reachable**: `unpack_string()`/`unpack_integer()`/`unpack_array()` are
+called directly, on file-sourced bytes, throughout `src/nvim/shada.c`'s ShaDa (session state:
+command history, registers, marks, etc.) file reader — e.g. `shada.c:3336-3347`, parsing a
+`kSDItemHistoryEntry` record straight out of the `.shada` file's msgpack-encoded body. That file's
+own doc comment on `unpack_string()` even says it's "safe to use e.g. in shada as we have loaded
+a complete shada item into a linear buffer" — this bug shows that assumption doesn't actually hold
+for a maliciously-crafted item. Concretely: **a crafted `.shada` file — the kind restored via
+`nvim -i <file>`, the default `shada` autoload on startup, or `:rshada`, and exactly the kind of
+file that ends up in a shared dotfiles repo or a "restore my session" download — can drive this
+exact code path with attacker-chosen bytes.** (This project did not attempt to build a full
+weaponized exploit chain from the corrupted `*size` through to a concrete information leak or
+crash inside a running `nvim`; the ASan reproduction above demonstrates the underlying memory
+corruption directly and precisely, which is the claim this report makes.)
+
+**Cross-checked against the other techniques**: neither cppcheck (§7) nor semgrep (§8) — now
+also scanning `src/mpack/` (see those sections) — flagged anything at or near
+`unpacker.c:550`. This is consistent with this report's overall theme (different techniques
+catch genuinely different classes of issues): a pattern/dataflow-based static analyzer has no way
+to know that `*size` is "the wrong variable to compare here" without understanding what
+`mpack_rtoken()` consumed — that's a semantic property, not a syntactic pattern, and exactly what
+bounded symbolic execution over concrete arithmetic (CBMC) is suited to catching that the other
+two tools in this project are not.
+
+**Interpretation**: this is the strongest single result in this project. Fuzzing `unpack_string()`
+for the same time budget as `base64.c` (§4) did not find this input by random mutation within the
+budget run here — CBMC's exhaustive, bounded search over every possible byte value did, on the
+very first target this project pointed it at beyond `base64.c`. That's the concrete case for why
+"upstream's CI already runs ASan/UBSan/CodeQL/Coverity on every commit" (§1) is not the same
+claim as "this code has been model-checked" — none of those tools reason about this class of
+property the way CBMC does.
 
 ## 6. CPU profiling (Valgrind: `callgrind`)
 
@@ -242,24 +487,29 @@ two tools satisfying the course's independent-discovery requirement.
 
 **Configuration** (`cppcheck/run_cppcheck.sh`): driven by CMake's `compile_commands.json`
 (`--project=`) so cppcheck sees the project's real include paths and preprocessor defines instead
-of guessing them, filtered to `src/nvim` only, `--enable=warning,style,performance,portability`.
+of guessing them, filtered to `src/nvim` and (since §1.1's msgpack-rpc target lives partly
+outside it) `src/mpack`, `--enable=warning,style,performance,portability`.
 
-**Result**: 2,920 findings total over 372 files (`cppcheck/report/cppcheck.xml`; categorized
-counts in `cppcheck/report/summary.txt`):
+**Result**: 2,982 findings total (`cppcheck/report/cppcheck.xml`; categorized counts in
+`cppcheck/report/summary.txt`):
 
 | Severity | Count |
 |---|---|
-| style | 2,754 |
-| error | 134 |
+| style | 2,815 |
+| error | 135 |
 | warning | 27 |
 | portability | 5 |
 
 The `style` bucket is dominated by `constVariablePointer`/`constParameterPointer`
-(missing-`const` suggestions, 1,546 combined) and `badBitmaskCheck` (604) — real but low-severity
+(missing-`const` suggestions, 1,549 combined) and `badBitmaskCheck` (604) — real but low-severity
 style opinions, not correctness bugs. The `error`-severity bucket is more interesting:
 `uninitStructMember` (116), `zerodiv` (6), `uninitvar`/`legacyUninitvar` (6), plus a handful of
 `internalAstError`/`syntaxError` (cppcheck's own parser giving up on complex macro-heavy code,
-not a code defect).
+not a code defect). Widening the scope to `src/mpack` added findings there too (mostly
+`constParameterPointer`/`constParameterCallback` in `unpacker.c`/`packer.c`, plus one `uninitvar`)
+but — checked specifically — **nothing at or near `unpacker.c:550`**, the line §5a's CBMC-found
+bug is actually on; see that section for what that says about the two techniques'
+complementary blind spots.
 
 **Manual verification of a representative finding**: `file_search.c:1188`,
 `uninitStructMember` on `file_id.inode`/`file_id.device_id`. Reading the surrounding code shows
@@ -269,7 +519,7 @@ cppcheck's dataflow analysis doesn't track that the two `!url` branches are the 
 so it can't see that `file_id` is always initialized before this use. **Confirmed false
 positive**, not a real bug. This is included specifically because a static-analysis section that
 only reports raw counts without checking whether the tool's claims hold up isn't actually
-verification — the same caution applies to the other 133 `error`-severity findings, which were
+verification — the same caution applies to the other 134 `error`-severity findings, which were
 not individually re-verified given the scope of this project.
 
 ## 8. Security scanning (`semgrep`)
@@ -280,12 +530,14 @@ what upstream's own CodeQL already runs on every commit (different engine, diffe
 authors, so it can surface things CodeQL's own ruleset doesn't check for).
 
 **Configuration** (`semgrep/run_semgrep.sh`): the public `p/c`, `p/security-audit`, and
-`p/cwe-top-25` rulesets over all of `src/nvim`.
+`p/cwe-top-25` rulesets over all of `src/nvim` and (same reason as §7) `src/mpack`.
 
-**Result**: 69 findings (`semgrep/report/semgrep.txt`, `semgrep/report/semgrep.sarif`), all from
-two rule categories: `insecure-use-strcat-fn` (18 files) and `insecure-use-string-copy-fn` —
-`strcpy`/`strncpy` (10 files) — pattern-based warnings against any use of these functions,
-regardless of whether the destination buffer is actually big enough.
+**Result**: 69 findings, unchanged by widening the scope to `src/mpack` (zero findings there —
+consistent with §5a's bug being a semantic length-check error, not a
+`strcat`/`strcpy`-shaped pattern semgrep's rules look for) — `semgrep/report/semgrep.txt`,
+`semgrep/report/semgrep.sarif`, all from two rule categories: `insecure-use-strcat-fn` (18 files)
+and `insecure-use-string-copy-fn` — `strcpy`/`strncpy` (10 files) — pattern-based warnings against
+any use of these functions, regardless of whether the destination buffer is actually big enough.
 
 **Manual verification of a representative finding**: `fold.c:3253`, `strcat(r, s)`. Reading
 backward, `r` is allocated a few lines earlier with
@@ -310,21 +562,30 @@ were deliberately chosen to be outside what the course already taught:
 2. **Writing unit tests for that gap** closed it directly and cheaply: 98.1% line coverage from
    under 100 lines of test code, because the target is small and pure.
 3. **Fuzzing** filled the same gap with adversarial breadth — tens of millions of inputs, zero
-   findings.
-4. **CBMC** filled it with exhaustive depth — a proof of memory- and arithmetic-safety for all
-   small inputs, a stronger guarantee than sampling can ever give for the sizes it covers.
-5. **Profiling** answered a different question entirely — not "is this code correct?" but "where
+   findings on `base64.c`.
+4. **CBMC** filled it with exhaustive depth on `base64.c` — a proof of memory- and
+   arithmetic-safety for all small inputs, a stronger guarantee than sampling can ever give for
+   the sizes it covers.
+5. **Extending unit tests/fuzzing/CBMC to a second target** (§1.1) — the msgpack-rpc wire
+   format — turned this from "verify one function" into "verify a second, independently-chosen
+   one too," and paid off immediately: **CBMC found a real integer-underflow/out-of-bounds-read
+   bug in `unpack_string()`** (§5a), confirmed with a standalone ASan reproduction, reachable via
+   attacker-crafted `.shada` files. Neither cppcheck nor semgrep flagged it, and fuzzing didn't
+   find it in the time budget run here — the strongest evidence in this whole project for why
+   "different verification techniques catch genuinely different things" isn't just a slogan.
+6. **Profiling** answered a different question entirely — not "is this code correct?" but "where
    does its time actually go?" — and the answer (memline's line-lookup hash map dominates
    instructions during a bulk substitute; the regex engine most people would guess first is
    comparatively cheap) was genuinely counter-intuitive going in.
-6. **Static analysis and security scanning**, picked specifically because the course didn't teach
-   them, surfaced real classes of findings (a flow-insensitivity false positive worth
-   understanding, and a not-yet-exploitable-but-fragile string-concatenation pattern) that
-   neither of the course's own covered tools (Clang Static Analyzer) nor upstream's CodeQL had
-   flagged in the specific instances checked here.
+7. **Static analysis and security scanning**, picked specifically because the course didn't teach
+   them, now sweep `src/mpack` as well as `src/nvim`, and surfaced real classes of findings (a
+   flow-insensitivity false positive worth understanding, and a not-yet-exploitable-but-fragile
+   string-concatenation pattern) that neither of the course's own covered tools (Clang Static
+   Analyzer) nor upstream's CodeQL had flagged in the specific instances checked here — though,
+   as §5a/§7/§8 note, neither caught the one bug this project actually found.
 
-None of these six results existed in neovim's own considerable CI investment before this
-analysis, despite that CI already running ASan/UBSan/TSan/CodeQL/Coverity on every commit.
+None of these results existed in neovim's own considerable CI investment before this analysis,
+despite that CI already running ASan/UBSan/TSan/CodeQL/Coverity on every commit.
 
 ## Bonus: Coverity (industrial static analysis)
 
@@ -412,12 +673,20 @@ the same kind of correctness properties (round-trip behavior, exhaustive bounded
 three target. Consistent with this report's overall theme: different verification techniques catch
 genuinely different classes of issues.
 
+**Note**: Coverity was not re-run against §1.1's msgpack-rpc target — it's a bonus, license-gated
+tool not counted toward the six required techniques (§1), and re-running it was judged a worse use
+of remaining time than the work that actually found something (§5a). Whether Coverity's dataflow
+analysis would have caught the `unpack_string()` underflow is an open question this project
+doesn't answer.
+
 ## Reproducing this analysis
 
 Tool versions used: CMake 4.4.2, Ninja 1.13.2, `lcov`/`genhtml` 2.5-0, CBMC 6.11.0, Homebrew
 LLVM/clang 22.1.8 (fuzzing), Valgrind 3.22.0 (inside `ubuntu:24.04`, Docker Desktop for Mac),
 cppcheck 2.21.0, semgrep 1.174.0, Coverity Static Analysis 2026.3.2 (bonus, license-gated —
-see "Bonus: Coverity" above).
+see "Bonus: Coverity" above). The msgpack-rpc target (§1.1) additionally needs libuv and luajit
+headers (`brew install libuv luajit` on macOS) — both already required to build the `neovim`
+submodule itself, so no environment that can build neovim needs anything extra.
 
 See `README.md` §3 for the exact reproduction command for each tool; every tool's directory
 (`unit_tests/`, `fuzzing/`, `cbmc/`, `valgrind/`, `cppcheck/`, `semgrep/`, `coverity/`) contains its

@@ -17,7 +17,7 @@ semgrep scan \
   --config p/cwe-top-25 \
   --metrics=off \
   --sarif --output semgrep/report/semgrep.sarif \
-  neovim/src/nvim
+  neovim/src/nvim neovim/src/mpack
 
 semgrep scan \
   --config p/c \
@@ -25,6 +25,6 @@ semgrep scan \
   --config p/cwe-top-25 \
   --metrics=off \
   --text --output semgrep/report/semgrep.txt \
-  neovim/src/nvim
+  neovim/src/nvim neovim/src/mpack
 
 echo "Reports: semgrep/report/semgrep.sarif, semgrep/report/semgrep.txt"
